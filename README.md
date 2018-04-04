@@ -64,6 +64,8 @@ ks prototype use io.ksonnet.pkg.h2o3 h2o3 \
 --name h2o3 \
 --namespace kubeflow \
 --model_server_image <location_of_docker_image>
+
+ks apply <my_environment_name> -c h2o3
 ```
 - run `kubectl get svc -n kubeflow` to find the External IP address.
 - Open a jupyter notebook on a local computer that has H2O installed locally.
