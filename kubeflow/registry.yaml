@@ -19,3 +19,6 @@ libraries:
   h2o3:
     version: master
     path: h2o3
+  h2o3-cluster:
+    version: master
+    path: h2o3-cluster
