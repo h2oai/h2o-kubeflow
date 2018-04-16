@@ -1,0 +1,12 @@
+apiVersion: '0.1'
+kind: ksonnet.io/registry
+libraries:
+  driverless:
+    version: master
+    path: driverless
+  h2o3-static:
+    version: master
+    path: h2o3-static
+  h2o3-scaling:
+    verion: master
+    path: h2o3-scaling
