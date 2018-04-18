@@ -1,3 +1,5 @@
+[![Docker Repository on Quay](https://quay.io/repository/fjudith/h2o-kubeflow-notebook/status "Docker Repository on Quay")](https://quay.io/repository/fjudith/h2o-kubeflow-notebook)
+
 # H2O + Kubeflow Integration
 
 This is a project for the integration of H2O.ai and Kubeflow. The integration of H2O and Kubeflow is an extremely powerful opportunity, as it provides a turn-key solution for easily deployable and highly scalable machine learning applications, with minimal input required from the user.
