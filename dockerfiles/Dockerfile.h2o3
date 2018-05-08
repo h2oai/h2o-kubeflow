@@ -22,8 +22,33 @@ RUN \
   apt-get clean && \
   rm -rf /var/cache/apt/* && \
 
+# Install Prerequisite Packages
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    curl \
+    wget \
+    unzip \
+    apt-utils \
+    software-properties-common \
+    python-software-properties \
+    python3-setuptools \
+    python3-pip \
+    python-pip \
+    gdebi \
+    python3-pandas \
+    python-pandas \
+    python3-numpy \
+    python-numpy \
+    python3-matplotlib \
+    python-matplotlib \
+    libxml2-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libgtk2.0-0 \
+    iputils-ping \
+    cloud-utils \
+    apache2-utils && \
+
 # Install Oracle Java 8
-  DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip python-pip python-sklearn python-pandas python-numpy python-matplotlib software-properties-common python-software-properties && \
   add-apt-repository -y ppa:webupd8team/java && \
   apt-get update -q && \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
@@ -51,6 +76,11 @@ RUN \
   wget https://raw.githubusercontent.com/laurendiperna/Churn_Scripts/master/Transformation_Script.py && \
   wget https://raw.githubusercontent.com/laurendiperna/Churn_Scripts/master/Modeling_Script.py
 
+# Get kubectl
+RUN \
+  curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+  chmod +x ./kubectl && \
+  mv ./kubectl /usr/local/bin/kubectl
 
 # Define a mountable data directory
 #VOLUME \
@@ -59,6 +89,9 @@ RUN \
 # Define the working directory
 #WORKDIR \
 #  /data
+
+COPY docker-startup.sh /opt/docker-startup.sh
+RUN chmod +x /opt/docker-startup.sh
 
 EXPOSE 54321
 EXPOSE 54322
