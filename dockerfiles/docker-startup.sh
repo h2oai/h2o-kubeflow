@@ -1,3 +1,3 @@
-cd /opt
+#!/bin/bash
 
 echo "Hello World!" >> test.txt

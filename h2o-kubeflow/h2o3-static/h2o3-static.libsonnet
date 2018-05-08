@@ -75,6 +75,10 @@ local networkSpec = networkPolicy.mixin.spec;
                       {
                         name: "MEMORY",
                         value: memory,
+                      },
+                      {
+                        name: "DEP_NAME",
+                        value: name
                       }
                     ],
                     ports: [
@@ -85,13 +89,11 @@ local networkSpec = networkPolicy.mixin.spec;
                     ],
                     workingDir: "/opt",
                     command: [
-                      "java",
-                      "-Xmx$(MEMORY)g",
-                      "-jar",
-                      "h2o.jar",
-                      "-name",
-                      "h2oCluster",
-                      "docker-startup.sh",
+                      "/bin/bash",
+                    ],
+                    args: [
+                      "-c",
+                      "/opt/docker-startup.sh && echo $(cat test.txt) && java -Xmx$(MEMORY)g -jar h2o.jar -name h2oCluster",
                     ],
                     resources: {
                       requests: {
