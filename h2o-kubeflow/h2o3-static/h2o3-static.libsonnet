@@ -93,7 +93,7 @@ local networkSpec = networkPolicy.mixin.spec;
                     ],
                     args: [
                       "-c",
-                      "/opt/docker-startup.sh && echo $(cat test.txt) && java -Xmx$(MEMORY)g -jar h2o.jar -name h2oCluster",
+                      "/opt/docker-startup.sh && echo $(cat test.txt) && java -Xmx$(MEMORY)g -jar h2o.jar -flatfile flatfile.txt -name h2oCluster",
                     ],
                     resources: {
                       requests: {
