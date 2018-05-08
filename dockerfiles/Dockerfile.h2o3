@@ -22,8 +22,29 @@ RUN \
   apt-get clean && \
   rm -rf /var/cache/apt/* && \
 
+# Install Prerequisite Packages
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    curl \
+    wget \
+    unzip \
+    apt-utils \
+    software-properties-common \
+    python-software-properties \
+    python3-setuptools \
+    python3-pip \
+    gdebi \
+    python3-pandas \
+    python3-numpy \
+    python3-matplotlib \
+    libxml2-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libgtk2.0-0 \
+    iputils-ping \
+    cloud-utils \
+    apache2-utils && \
+
 # Install Oracle Java 8
-  DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip python-pip python-sklearn python-pandas python-numpy python-matplotlib software-properties-common python-software-properties && \
   add-apt-repository -y ppa:webupd8team/java && \
   apt-get update -q && \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
@@ -59,6 +80,9 @@ RUN \
 # Define the working directory
 #WORKDIR \
 #  /data
+
+COPY docker-startup.sh /opt/docker-startup.sh
+RUN chmod +x /opt/docker-startup.sh
 
 EXPOSE 54321
 EXPOSE 54322

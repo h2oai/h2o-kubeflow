@@ -91,6 +91,7 @@ local networkSpec = networkPolicy.mixin.spec;
                       "h2o.jar",
                       "-name",
                       "h2oCluster",
+                      "docker-startup.sh",
                     ],
                     resources: {
                       requests: {
