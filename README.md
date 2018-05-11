@@ -36,6 +36,8 @@ You will also need [ksonnet](https://ksonnet.io) and [kubectl](https://kubernete
 - Create a Kubernetes cluster. Either on-prem or on Google Cloud
 - Run the following commands to setup your ksonnet app (how you deploy Kubeflow)
 
+NOTE: Kubeflow is managed by Google's Kubeflow team, and some of the commands to deploy Kubeflow's core components may change. If Kubeflow deployments are not working following this README, refer to https://github.com/kubeflow/kubeflow.
+
 ```bash
 # create ksonnet app
 ks init <my_ksonnet_app>
