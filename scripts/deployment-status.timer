@@ -1,0 +1,5 @@
+[Unit]
+Description=Timer to schedule deployment-status.service to run
+
+[Timer]
+OnCalendar=minutely

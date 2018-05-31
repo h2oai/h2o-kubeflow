@@ -1,0 +1,6 @@
+[Unit]
+Description=Check status of kubernetes cluster deployments. If pods pending due to insufficient resources and env variable is set, add new node.
+
+[Service]
+User=ubuntu
+ExecStart=/opt/kubeflow/deployment-status.sh

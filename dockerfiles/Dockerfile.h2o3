@@ -95,6 +95,8 @@ RUN chmod +x /opt/docker-startup.sh
 
 EXPOSE 54321
 EXPOSE 54322
+EXPOSE 54323
+EXPOSE 54324
 
 #ENTRYPOINT ["java", "-Xmx4g", "-jar", "/opt/h2o.jar"]
 # Define default command
