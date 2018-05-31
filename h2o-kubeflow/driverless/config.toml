@@ -1,0 +1,372 @@
+##############################################################################
+##                        DRIVERLESS AI CONFIGURATION FILE
+#
+# Comments:
+# This file is authored in TOML (see https://github.com/toml-lang/toml)
+#
+# Config Override Chain
+# Configuration variables for Driverless AI can be provided in several ways,
+# the config engine reads and overides variables in the following order
+#
+# 1. h2oai/config/config.toml
+# [internal not visible to users]
+#
+# 2. config.toml
+# [place file in a folder/mount file in docker container and provide path
+# in "DRIVERLESS_AI_CONFIG_FILE" environment variable]
+#
+# 3. Environment variable
+# [configuration variables can also be provided as environment variables
+# they must have the prefix "DRIVERLESS_AI_" followed by
+# variable name in caps e.g "authentication_method" can be provided as
+# "DRIVERLESS_AI_AUTHENTICATION_METHOD"]
+
+
+##############################################################################
+## Setup : Configure application server here (ip, ports, authentication, file
+# types etc)
+
+# IP address and port of process proxy.
+#process_server_ip = "127.0.0.1"
+#process_server_port = 8080
+
+# IP address and port of H2O instance.
+#h2o_ip = "127.0.0.1"
+#h2o_port = 54321
+
+# IP address and port for Driverless AI HTTP server.
+#ip = "127.0.0.1"
+#port = 12345
+
+# Data directory. All application data and files related datasets and
+# experiments are stored in this directory.
+
+#data_directory = "./tmp"
+
+# Start HTTP server in debug mode (DO NOT enable in production).
+#debug = false
+
+# Whether to run quick performance benchmark at start of application and each
+# experiment
+#enable_benchmark = false
+
+# Whether to run quick startup checks at start of application
+#enable_startup_checks = true
+
+# Whether to opt in to usage statistics and bug reporting
+#usage_stats_opt_in = false
+
+# Whether to verbosely log datatable calls
+#datatable_verbose_log = false
+
+# Whether to create the Python scoring pipeline at the end of each experiment
+#make_python_scoring_pipeline = true
+
+# Whether to create the MOJO scoring pipeline at the end of each experiment
+# Note: Not all transformers or main models are available for MOJO (e.g. no gblinear main model)
+#make_mojo_scoring_pipeline = false
+
+# authentication_method
+# unvalidated : Accepts user id and password, does not validate password
+# none : Does not ask for user id or password, authenticated as admin
+# pam :  Accepts user id and password, Validates user with operating system
+# ldap : Accepts user id and password, Validates against an ldap server, look
+# local: Accepts a user id and password, Validated against a htpasswd file provided in local_htpasswd_file
+# for additional settings under LDAP settings
+#authentication_method = "unvalidated"
+
+# LDAP Settings
+#ldap_server = ""
+#ldap_port = ""
+#ldap_dc = ""
+
+# Local password file
+# Generating a htpasswd file: see syntax below
+# htpasswd -B "<location_to_place_htpasswd_file>" "<username>"
+# note: -B forces use of brcypt, a secure encryption method
+#local_htpasswd_file = ""
+
+# Supported file formats (file name endings must match for files to show up in file browser)
+#supported_file_types = "csv, tsv, txt, dat, tgz, gz, bz2, zip, xz, xls, xlsx, nff, feather, bin, arff, parquet"
+
+# File System Support
+# file : local file system/server file system
+# hdfs : Hadoop file system, remember to configure the hadoop coresite and keytab below
+# s3 : Amazon S3, optionally configure secret and access key below
+# gcs : Google Cloud Storage, remember to configure gcs_path_to_service_account_json below
+# gbq : Google Big Query, remember to configure gcs_path_to_service_account_json below
+enabled_file_systems = "file, hdfs, s3, gcs, gbq"
+
+# do_not_log_list : add configurations that you do not wish to be recorded in logs here
+#do_not_log_list = "local_htpasswd_file, aws_access_key_id, aws_secret_access_key"
+
+##############################################################################
+## Hardware: Configure hardware settings here (GPUs, CPUs, Memory, etc.)
+
+# Max number of CPU cores to use per experiment. Set to <= 0 to use all cores.
+#max_cores = 0
+
+# Number of GPUs to use per model training task.  Set to -1 for all GPUs.
+# Currently n_gpus!=1 disables GPU locking, so is only recommended for single
+# experiments and single users.
+# Ignored if GPUs disabled or no GPUs on system.
+#num_gpus = 1
+
+# Which gpu_id to start with
+# If use CUDA_VISIBLE_DEVICES=... to control GPUs, gpu_id=0 is still the
+# first in that list of devices.
+# E.g. if CUDA_VISIBLE_DEVICES="4,5" then gpu_id_start=0 will refer to the
+# device #4.
+#gpu_id_start = 0
+
+# Maximum number of workers for DriverlessAI server pool (only 1 needed
+# currently)
+#max_workers = 1
+
+# Period (in seconds) of ping by DriverlessAI server to each experiment
+# (in order to get logger info like disk space and memory usage)
+# 0 means don't print anything
+#ping_period = 60
+
+# Minimum amount of disk space in GB needed to run experiments.
+# Experiments will fail if this limit is crossed.
+#disk_limit_gb = 5
+
+# Minimum amount of system memory in GB needed to start experiments
+#memory_limit_gb = 5
+
+# Minimum number of rows needed to run experiments (values lower than 100
+# might not work)
+#min_num_rows = 100
+
+# Precision of how data is stored and precision that most computations are performed at
+# "float32" best for speed, "float64" best for accuracy or very large input values
+# "float32" allows numbers up to about +-3E38 with relative error of about 1E-7
+# "float64" allows numbers up to about +-1E308 with relative error of about 1E-16
+#data_precision = "float64"
+
+# Precision of some transformers, like TruncatedSVD.
+# (Same options and notes as data_precision)
+# Useful for higher precision in transformers with numerous operations that can accumulate error
+# Also useful if want faster performance for transformers but otherwise want data stored in high precision
+#transformer_precision = "auto"
+
+
+##############################################################################
+## Machine Learning : Configure machine learning configurations here
+# (Data, Feature Engineering, Modelling etc)
+
+# List of values that should be interpreted as missing values during data import. Applies both to numeric and string columns. Note that 'nan' is always interpreted as a missing value for numeric columns.
+#missing_values = "['', '?', 'None', 'nan', 'NA', 'N/A', 'inf', '-inf', '1.7976931348623157e+308', '-1.7976931348623157e+308']"
+
+# Internal threshold for number of rows x number of columns to trigger certain statistical
+# techniques to increase statistical fidelity
+#statistical_threshold_data_size_small = 100000
+
+# Internal threshold for number of rows x number of columns to trigger certain statistical
+# techniques that can speed up modeling
+#statistical_threshold_data_size_large = 100000000
+
+# Maximum number of columns
+#max_cols = 10000
+
+# Maximum number of uniques allowed in fold column
+#max_fold_uniques = 100000
+
+# Max number of uniques for integer valued columns to be treated as categoricals too (test applies to first statistical_threshold_data_size_small rows only)
+#max_int_as_cat_uniques = 10000
+
+# Number of folds for feature evolution models
+# Increasing this will put a lower fraction of data into validation and more into training
+# E.g. num_folds=3 means 67%/33% training/validation splits
+# Actual value will vary for small or big data cases
+#num_folds = 3
+
+# Accuracy setting equal and above which enables full cross-validation
+#full_cv_accuracy_switch = 8
+
+# Accuracy setting equal and above which enables stacked ensemble as final model
+#ensemble_accuracy_switch = 5
+
+# Number of fold splits to use for ensemble >= 2
+# Actual value will vary for small or big data cases
+#num_ensemble_folds = 5
+
+# Number of repeats for each fold
+# (modified slightly for small or big data cases)
+#fold_reps = 1
+
+# For binary classification: ratio of majority to minority class equal and above which to enable undersampling
+#imbalance_ratio_undersampling_threshold = 5
+
+# For binary classification: scorers for which to enable undersampling if above threshold is met
+#undersampling_scorers = "AUC, AUCPR, GINI"
+
+# Maximum number of classes
+#max_num_classes = 100
+
+# Whether to enable early stopping
+#early_stopping = true
+
+# Threshold for average string-is-text score as determined by internal heuristics
+# Higher values will favor string columns as categoricals, lower values will favor string columns as text
+#string_col_as_text_threshold = 0.4
+
+# Interpretability setting equal and above which will use monotonicity constraints in GBM
+#monotonicity_constraints_interpretability_switch = 7
+
+# Accuracy setting equal and above which enables tuning of target transform for regression
+#tune_target_transform_accuracy_switch = 3
+
+# Accuracy setting equal and above which enables tuning of model parameters
+#tune_parameters_accuracy_switch = 3
+
+# number of individuals at accuracy 1 (i.e. models built per iteration, which compete in feature evolution)
+# 4 times this default for accuracy 10
+# If using GPUs, restricted so always 1 model scored per GPU per iteration
+# (modified slightly for small or big data cases)
+#num_individuals = 2
+
+# set fixed number of individuals (if > 0) - useful to compare different hardware configurations
+#fixed_num_individuals = 0
+
+# Black list of transformers (i.e. transformers to not use, independent of
+# the interpretability setting)
+# for multi-class: "['NumCatTETransformer', 'TextLinModelTransformer',
+# 'FrequentTransformer', 'CVTargetEncodeF', 'ClusterDistTransformer',
+# 'WeightOfEvidenceTransformer', 'TruncSVDNumTransformer', 'CVCatNumEncodeF',
+# 'DatesTransformer', 'TextTransformer', 'FilterTransformer',
+# 'NumToCatWoETransformer', 'NumToCatTETransformer', 'ClusterTETransformer',
+# 'BulkInteractionsTransformer']"
+#
+# for regression/binary: "['TextTransformer', 'ClusterDistTransformer',
+# 'FilterTransformer', 'TextLinModelTransformer', 'NumToCatTETransformer',
+# 'DatesTransformer', 'WeightOfEvidenceTransformer', 'BulkInteractionsTransformer',
+# 'FrequentTransformer', 'CVTargetEncodeF', 'NumCatTETransformer',
+# 'NumToCatWoETransformer', 'TruncSVDNumTransformer', 'ClusterTETransformer',
+# 'CVCatNumEncodeF']"
+#
+# This list appears in the experiment logs (search for "Transformers used")
+# e.g. to disable all Target Encoding: black_list_transformers =
+# "['NumCatTETransformer', 'CVTargetEncodeF', 'NumToCatTETransformer',
+# 'ClusterTETransformer']"
+#black_list_transformers = ""
+
+# Black list of genes (i.e. genes (built on top of transformers) to not use,
+# independent of the interpretability setting)
+#
+# for multi-class: "['BulkInteractionsGene', 'WeightOfEvidenceGene',
+# 'NumToCatTargetEncodeSingleGene', 'FilterGene', 'TextGene', 'FrequentGene',
+# 'NumToCatWeightOfEvidenceGene', 'NumToCatWeightOfEvidenceMonotonicGene', '
+# CvTargetEncodeSingleGene', 'DateGene', 'NumToCatTargetEncodeMultiGene', '
+# DateTimeGene', 'TextLinRegressorGene', 'ClusterIDTargetEncodeSingleGene',
+# 'CvCatNumEncodeGene', 'TruncSvdNumGene', 'ClusterIDTargetEncodeMultiGene',
+# 'NumCatTargetEncodeMultiGene', 'CvTargetEncodeMultiGene', 'TextLinClassifierGene',
+# 'NumCatTargetEncodeSingleGene', 'ClusterDistGene']"
+#
+# for regression/binary: "['CvTargetEncodeSingleGene', 'NumToCatTargetEncodeSingleGene',
+# 'CvCatNumEncodeGene', 'ClusterIDTargetEncodeSingleGene', 'TextLinRegressorGene',
+# 'CvTargetEncodeMultiGene', 'ClusterDistGene', 'FilterGene', 'DateGene',
+# 'ClusterIDTargetEncodeMultiGene', 'NumToCatTargetEncodeMultiGene',
+# 'NumCatTargetEncodeMultiGene', 'TextLinClassifierGene', 'WeightOfEvidenceGene',
+# 'FrequentGene', 'TruncSvdNumGene', 'BulkInteractionsGene', 'TextGene',
+# 'DateTimeGene', 'NumToCatWeightOfEvidenceGene',
+# 'NumToCatWeightOfEvidenceMonotonicGene', ''NumCatTargetEncodeSingleGene']"
+#
+# This list appears in the experiment logs (search for "Genes used")
+# e.g. to disable bulk interaction gene, use:  black_list_genes =
+#"['BulkInteractionsGene']"
+#black_list_genes = ""
+
+# Interpretability equal and beyond which will mix-in GLM with GBM
+# Mixes in tuning as 50%/50% GBM/GLM
+# set to 11 if want to disable this behavior
+#glm_interpretability_switch = 10
+
+# Interpretability equal and beyond which will only use GLM and no GBM
+# set to 11 if want to disable this behavior
+#glm_interpretability_exclusive_switch = 10
+
+# Exclusively use GLM (no GBM) regardless of any other settings
+#glm_enable_exclusive = false
+
+# Enable time series recipe
+#time_series_recipe = true
+
+# Whether to enable train/valid and train/test distribution shift detection
+#check_distribution_shift = true
+
+# Maximum number of GBM trees or GLM iterations
+# Early-stopping usually chooses less
+#max_nestimators = 3000
+
+# Upper limit on learning rate for feature engineering GBM models
+#max_learning_rate = 0.05
+
+# Lower limit on learning rate for final ensemble GBM models
+#min_learning_rate = 0.01
+
+# Whether to speed up predictions used inside MLI with a fast approximation
+#mli_fast_approx = true
+
+# When number of rows are above this limit sample for MLI
+#mli_sample_above = 100000
+
+# When sample for MLI how many rows to sample
+#mli_sample_size = 100000
+
+# how many bins to do quantile binning
+#mli_num_quantiles = 10
+
+# mli random forest number of trees
+#mli_drf_num_trees = 100
+
+# mli random forest max depth
+#mli_drf_max_depth = 20
+
+# not only sample training, but also sample scoring
+#mli_sample_training = true
+
+##############################################################################
+## Connectors : Configure connector specifications here
+
+# Configurations for a HDFS data source
+# Path of hdfs coresite.xml
+#core_site_xml_path = ""
+# Path of the principal key tab file
+#key_tab_path = ""
+
+# HDFS connector
+# Auth type can be Principal/keytab/keytabPrincipal
+# Specify HDFS Auth Type, allowed options are:
+#   noauth : No authentication needed
+#   principal : Authenticate with HDFS with a principal user
+#   keytab : Authenticate with a Key tab (recommended)
+#   keytabimpersonation : Login with impersonation using a keytab
+#hdfs_auth_type = "noauth"
+
+# Kerberos app principal user (recommended)
+#hdfs_app_principal_user = ""
+# Specify the user id of the current user here as user@realm
+#hdfs_app_login_user = ""
+# JVM args for HDFS distributions
+#hdfs_app_jvm_args = ""
+# hdfs class path
+#hdfs_app_classpath = ""
+
+# AWS authentication settings
+#   True : Authenticated connection
+#   False : Unverified connection
+#aws_auth = "False"
+
+# S3 Connector credentials
+#aws_access_key_id = ""
+#aws_secret_access_key = ""
+
+# GCS Connector credentials
+# example (suggested) -- "/licenses/my_service_account_json.json"
+#gcs_path_to_service_account_json = ""
+
+
+##############################################################################
+## END

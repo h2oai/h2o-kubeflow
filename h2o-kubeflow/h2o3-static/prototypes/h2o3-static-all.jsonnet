@@ -5,7 +5,7 @@
 // @param name string Name to give each of the components
 // @param model_server_image string gcr.io/h2o-gce/h2o3
 // @optionalParam namespace string default namespace
-// @optionalParam memory string 1Gi starting memory per pod
+// @optionalParam memory string 1 starting memory per pod
 // @optionalParam cpu string 1 starting number of cpu per pod
 // @optionalParam replicas number 1 starting number of pods
 

@@ -11,16 +11,6 @@ local networkSpec = networkPolicy.mixin.spec;
     deployment:: {
       local defaults = {
         imagePullPolicy:: "IfNotPresent",
-        resources:: {
-          requests: {
-            memory: "1Gi",
-            cpu: "1",
-          },
-          limits: {
-            memory: "10Gi",
-            cpu: "4",
-          },
-        },
       },
 
       modelService(name, namespace, labels={ app: name }): {
@@ -34,24 +24,26 @@ local networkSpec = networkPolicy.mixin.spec;
         spec: {
           ports: [
             {
-              port: 9000,
-              targetPort: 9000,
+              port: 12345,
+              protocol: "TCP",
+              targetPort: 12345,
             },
           ],
           selector: labels,
-          type: "ClusterIP",
+          type: "NodePort",
+          sessionAffinity: "ClientIP"
         },
       },
 
-      modelServer(name, namespace, modelServerImage, labels={ app: name } ):
+      modelServer(name, namespace, memory, cpu, gpu, modelServerImage, labels={ app: name } ):
         local volume = {
           name: "local-data",
           namespace: namespace,
           emptyDir: {},
         };
-        base(name, namespace, modelServerImage, labels),
+        base(name, namespace, memory, cpu, gpu, modelServerImage, labels),
 
-      local base(name, namespace, modelServerImage, labels) =
+      local base(name, namespace, memory, cpu, gpu, modelServerImage, labels) =
         {
           apiVersion: "extensions/v1beta1",
           kind: "Deployment",
@@ -78,12 +70,48 @@ local networkSpec = networkPolicy.mixin.spec;
                     name: name,
                     image: modelServerImage,
                     imagePullPolicy: defaults.imagePullPolicy,
-                    env: [],
-                    ports: [
+                    env: [
                       {
-                        containerPort: 9000,
+                        name: "DRIVERLESS_AI_CONFIG_FILE",
+                        value: "/configs/config.toml"
+                      },
+                      {
+                        name: "DRIVERLESS_AI_GCS_PATH_TO_SERVICE_ACCOUNT_JSON",
+                        value: "/configs/gcp_auth.json"
                       },
                     ],
+                    ports: [
+                      {
+                        containerPort: 12345,
+                        protocol: "TCP",
+                      },
+                    ],
+                    resources: {
+                      requests: {
+                        memory: memory + "Gi",
+                        cpu: cpu,
+                        "nvidia.com/gpu": gpu,
+                      },
+                      limits: {
+                        memory: memory + "Gi",
+                        cpu: cpu,
+                        "nvidia.com/gpu": gpu,
+                      },
+                    },
+                    volumeMounts: [
+                      {
+                        mountPath: "/configs",
+                        name: "dai-config",
+                      },
+                    ],
+                  },
+                ],
+                volumes: [
+                  {
+                    name: "dai-config",
+                    configMap: {
+                      name: name,
+                    },
                   },
                 ],
                 dnsPolicy: "ClusterFirst",
