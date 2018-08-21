@@ -30,7 +30,7 @@ local networkSpec = networkPolicy.mixin.spec;
             },
           ],
           selector: labels,
-          type: "NodePort",
+          type: "LoadBalancer",
           sessionAffinity: "ClientIP"
         },
       },
