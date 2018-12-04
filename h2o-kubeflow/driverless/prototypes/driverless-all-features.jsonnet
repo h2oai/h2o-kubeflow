@@ -8,6 +8,7 @@
 // @optionalParam memory string 1 memory allocated for deployment
 // @optionalParam cpu string 1 number of cpu allocated for deployment
 // @optionalParam gpu number 0 number of gpu allocated for deployment
+// @optionalParam pvcSize number 50 size of persistent volume claim for deployment
 
 local k = import 'k.libsonnet';
 local driverlessai = import 'h2o-kubeflow/driverless/driverless.libsonnet';
@@ -17,9 +18,11 @@ local namespace = import 'param://namespace';
 local memory = import 'param://memory';
 local cpu = import 'param://cpu';
 local gpu = import 'param://gpu';
+local pvcSize = import 'param://pvcSize';
 local modelServerImage = import 'param://model_server_image';
 
 std.prune(k.core.v1.list.new([
   driverlessai.parts.deployment.modelServer(name, namespace, memory, cpu, gpu, modelServerImage),
   driverlessai.parts.deployment.modelService(name, namespace),
+  driverlessai.parts.deployment.modelPersistentVolumeClaim(name, namespace, pvcSize),
 ]))

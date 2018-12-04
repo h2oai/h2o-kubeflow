@@ -35,6 +35,27 @@ local networkSpec = networkPolicy.mixin.spec;
         },
       },
 
+      modelPersistentVolumeClaim(name, namespace, pvcSize, labels={ app: name }): {
+        kind: "PersistentVolumeClaim",
+        apiVersion: "v1",
+        metadata: {
+          labels: labels,
+          name: name,
+          namespace: namespace,
+        },
+        spec: {
+          accessModes: [
+            "ReadWriteOnce",
+          ],
+          volumeMode: "Filesystem",
+          resources: {
+            requests: {
+              storage: pvcSize + "Gi",
+            },
+          },
+        },
+      },
+
       modelServer(name, namespace, memory, cpu, gpu, modelServerImage, labels={ app: name } ):
         local volume = {
           name: "local-data",
@@ -70,21 +91,27 @@ local networkSpec = networkPolicy.mixin.spec;
                     name: name,
                     image: modelServerImage,
                     imagePullPolicy: defaults.imagePullPolicy,
-                    env: [
-                      {
-                        name: "DRIVERLESS_AI_CONFIG_FILE",
-                        value: "/configs/config.toml"
-                      },
-                      {
-                        name: "DRIVERLESS_AI_GCS_PATH_TO_SERVICE_ACCOUNT_JSON",
-                        value: "/configs/gcp_auth.json"
-                      },
-                    ],
+                    securityContext: {
+                      privileged: true,
+                    },
                     ports: [
                       {
                         containerPort: 12345,
                         protocol: "TCP",
                       },
+                    ],
+                    env: [
+                      {
+                        name: "DAI_START_COMMAND",
+                        value: "if nvidia-smi | grep -o failed; then ./run.sh; else nvidia-smi -pm 1 && ./run.sh; fi",
+                      },
+                    ],
+                    command: [
+                      "/bin/bash",
+                    ],
+                    args: [
+                      "-c",
+                      "$(DAI_START_COMMAND)",
                     ],
                     resources: {
                       requests: {
@@ -100,17 +127,25 @@ local networkSpec = networkPolicy.mixin.spec;
                     },
                     volumeMounts: [
                       {
-                        mountPath: "/configs",
-                        name: "dai-config",
+                        mountPath: "/tmp",
+                        name: "dai-pvc",
                       },
+                      {
+                        mountPath: "/log",
+                        name: "dai-pvc",
+                      },
+                      {
+                        mountPath: "/license",
+                        name: "dai-pvc"
+                      }
                     ],
                   },
                 ],
                 volumes: [
                   {
-                    name: "dai-config",
-                    configMap: {
-                      name: name,
+                    name: "dai-pvc",
+                    persistentVolumeClaim: {
+                      claimName: name,
                     },
                   },
                 ],
