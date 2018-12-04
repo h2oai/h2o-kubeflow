@@ -37,6 +37,7 @@ ks prototype use io.ksonnet.pkg.driverless driverless \
 --memory 1 \
 --cpu 1 \
 --gpu 0 \
+--pvcSize 50 \
 --model_server_image opsh2oai/h2oai-runtime
 ```
 6. Deploy driverless on kubernetes:
