@@ -103,7 +103,7 @@ local networkSpec = networkPolicy.mixin.spec;
                     env: [
                       {
                         name: "DAI_START_COMMAND",
-                        value: "if nvidia-smi | grep -o failed; then ./run.sh; else nvidia-smi -pm 1 && ./run.sh; fi",
+                        value: "if nvidia-smi | grep -o failed || true; then ./run.sh; else nvidia-smi -pm 1 && ./run.sh; fi",
                       },
                     ],
                     command: [
