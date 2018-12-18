@@ -128,22 +128,22 @@ local networkSpec = networkPolicy.mixin.spec;
                     volumeMounts: [
                       {
                         mountPath: "/tmp",
-                        name: "dai-pvc",
+                        name: name + "-pvc",
                       },
                       {
                         mountPath: "/log",
-                        name: "dai-pvc",
+                        name: name + "-pvc",
                       },
                       {
                         mountPath: "/license",
-                        name: "dai-pvc"
+                        name: name + "-pvc",
                       }
                     ],
                   },
                 ],
                 volumes: [
                   {
-                    name: "dai-pvc",
+                    name: name + "-pvc",
                     persistentVolumeClaim: {
                       claimName: name,
                     },
