@@ -1,4 +1,4 @@
-# Static H2O-3 Cluster
+# Driverless AI Mojo Rest Server
 
 This will deploy a rest server for Driverless AI mojos
 
