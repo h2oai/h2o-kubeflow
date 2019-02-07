@@ -56,15 +56,15 @@ local networkSpec = networkPolicy.mixin.spec;
         },
       },
 
-      modelServer(name, namespace, memory, cpu, gpu, modelServerImage, labels={ app: name } ):
+      modelServer(name, namespace, configMapName, memory, cpu, gpu, modelServerImage, labels={ app: name } ):
         local volume = {
           name: "local-data",
           namespace: namespace,
           emptyDir: {},
         };
-        base(name, namespace, memory, cpu, gpu, modelServerImage, labels),
+        base(name, namespace, configMapName, memory, cpu, gpu, modelServerImage, labels),
 
-      local base(name, namespace, memory, cpu, gpu, modelServerImage, labels) =
+      local base(name, namespace, configMapName, memory, cpu, gpu, modelServerImage, labels) =
         {
           apiVersion: "extensions/v1beta1",
           kind: "Deployment",
@@ -105,7 +105,16 @@ local networkSpec = networkPolicy.mixin.spec;
                         name: "DAI_START_COMMAND",
                         value: "if nvidia-smi | grep -o failed || true; then ./run.sh; else nvidia-smi -pm 1 && ./run.sh; fi",
                       },
-                    ],
+                    ] + if configMapName != "null" then [
+                      {
+                        name: "DRIVERLESS_AI_CONFIG_FILE",
+                        value: "/config/config.toml"
+                      },
+                      {
+                        name: "DRIVERLESS_AI_LICENSE_FILE",
+                        value: "/config/license.sig"
+                      }
+                    ] else [],
                     command: [
                       "/bin/bash",
                     ],
@@ -133,12 +142,13 @@ local networkSpec = networkPolicy.mixin.spec;
                       {
                         mountPath: "/log",
                         name: name + "-pvc",
-                      },
-                      {
-                        mountPath: "/license",
-                        name: name + "-pvc",
                       }
-                    ],
+                    ] + if configMapName != "null" then [
+                      {
+                        mountPath: "/config",
+                        name: "dai-configmap-" + configMapName
+                      }
+                    ] else [],
                   },
                 ],
                 volumes: [
@@ -148,7 +158,14 @@ local networkSpec = networkPolicy.mixin.spec;
                       claimName: name,
                     },
                   },
-                ],
+                ] + if configMapName != "null" then [
+                  {
+                    name: "dai-configmap-" + configMapName,
+                    configMap: {
+                      name: configMapName,
+                    },
+                  }
+                ] else [],
                 dnsPolicy: "ClusterFirst",
                 restartPolicy: "Always",
                 schedulerName: "default-scheduler",

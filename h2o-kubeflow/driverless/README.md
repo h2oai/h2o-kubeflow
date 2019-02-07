@@ -21,7 +21,8 @@ $ cd <app-name>
 ks registry add h2o-kubeflow github.com/<path_to_github_repo>
 ks pkg install h2o-kubeflow/driverless
 ```
-4. Create ConfigMap Volume containing user configurations for Driverless AI
+4. (OPTIONAL) Create ConfigMap Volume containing user configurations for Driverless AI, expectation is that will contain 2 files: config.toml and license.sig, where config.toml will have any user overrides for Driverless AI and license.sig contains the license code for Driverless AI. A sample config.toml is provided in this directory or [here](http://docs.h2o.ai/driverless-ai/latest-stable/docs/userguide/config_toml.html#sample-config-toml-file).
+**NOTE**: all files inside the directory path will be loaded for consumption. EX. config.toml overrides authentication with local authentication (htpasswd), htpasswd file is contained in /path/to/configuration/files, then config.toml can consume the file at path /config/<name of htpasswd file>
 ```
 kubectl create configmap driverless --from-file="/path/to/configuration/files/"
 ```
@@ -38,6 +39,7 @@ ks prototype use io.ksonnet.pkg.driverless driverless \
 --cpu 1 \
 --gpu 0 \
 --pvcSize 50 \
+--configmap_name <configmap name> \
 --model_server_image opsh2oai/h2oai-runtime
 ```
 6. Deploy driverless on kubernetes:

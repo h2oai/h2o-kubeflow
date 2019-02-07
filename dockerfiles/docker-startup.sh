@@ -6,7 +6,7 @@ podsready="false"
 
 while [ $podsready = "false" ]
 do
-  if $(kubectl get pods -o wide | grep -q "<none>")
+  if $(kubectl get pods -o wide | awk '{print $6}' | grep -q "<none>")
   then
     sleep 5
   else
