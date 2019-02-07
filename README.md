@@ -1,5 +1,3 @@
-[![Docker Repository on Quay](https://quay.io/repository/fjudith/h2o-kubeflow-notebook/status "Docker Repository on Quay")](https://quay.io/repository/fjudith/h2o-kubeflow-notebook)
-
 # H2O + Kubeflow Integration
 
 This is a project for the integration of H2O.ai and Kubeflow. The integration of H2O and Kubeflow is an extremely powerful opportunity, as it provides a turn-key solution for easily deployable and highly scalable machine learning applications, with minimal input required from the user.
@@ -10,33 +8,35 @@ This is a project for the integration of H2O.ai and Kubeflow. The integration of
 #### H2O 3
 [H2O 3’s](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/index.html) goal is to reduce the time spent by data scientists on time-consuming tasks like designing grid search algorithms and tuning hyperparameters, while also providing an interface that allows newer practitioners an easy foothold into the machine learning space.
 
+#### Driverless AI
+[Driverless AI](http://docs.h2o.ai/driverless-ai/latest-stable/docs/userguide/index.html) is an artificial intelligence (AI) platform for automatic machine learning. Driverless AI automates some of the most difficult data science and machine learning workflows such as feature engineering, model validation, model tuning, model selection and model deployment. It aims to achieve highest predictive accuracy, comparable to expert data scientists, but in much shorter time thanks to end-to-end automation. Driverless AI also offers automatic visualizations and machine learning interpretability (MLI).
+
 #### Contents
-This repository contains all the necessary components for deploying H2O 3 on Kubeflow
+This repository contains all the necessary components for deploying H2O.ai's core products on Kubeflow
 
-Dockerfiles:
-- Dockerfile.h2o3 -- dockerfile to build a docker image of H2O 3. This image is a standard deployment of H2O 3, and is readily available [here](https://github.com/h2oai/h2o-3/blob/master/Dockerfile) as well.
-- Dockerfile.h2o3notebook -- dockerfile to build the Kubeflow Jupyterhub Notebook with H2O 3 packages. This requires the following scripts:
-  - jupyter_notebook_config.py
-  - start-singleuser.sh
-  - start-notebook.sh
-  - start.sh
-
-kubeflow:
-- directories [driverless, h2o3-static, h2o3-scaling] contain the manifests required to deploy their corresponding applications. Please note, all Kubeflow components are available in the Kubeflow repository [here](https://github.com/kubeflow/kubeflow)
-  - h2o3-static -- contains components for deploying a single or multinode H2O-3 cluster using Kubeflow. If more nodes are required, you will need to manually change the parameters and relaunch the cluster.
-  - h2o3-scaling -- contains components for deploying an H2O-3 cluster that will automatically scale with memory demands. Read the README within the component folder for additional information and requirements.  
-- registry.yaml -- manifest file that declares ksonnet packages available within the directory.
-
+```
+h2o-kubeflow
+|-- dockerfiles
+    |-- A copy of dockerfiles that will are currently part of components in POC
+|-- h2o-kubeflow // --> Ksonnet registry containing all packages offered in this repo
+    |-- h2oai
+        |-- Ksonnet package containing deployment templates for core offerings from H2O.ai [H2O-3, Driverless AI]
+    |-- <all other package directories>
+        |-- Ksonnet packages built as a proof of concept. Not consistently maintained
+    |-- registry.yaml // --> file defining all packages included in the registry
+```
 
 #### Quick Start
-Complete steps to deploy Kubeflow can be found in their [User Guide](https://github.com/kubeflow/kubeflow/blob/master/user_guide.md)
+Complete deployment steps can be found inside this directory: [https://github.com/h2oai/h2o-kubeflow/tree/master/h2o-kubeflow/h2oai](https://github.com/h2oai/h2o-kubeflow/tree/master/h2o-kubeflow/h2oai).
+
+Repository for Kubeflow can be found [here](https://github.com/kubeflow/kubeflow), and complete steps to deploy Kubeflow can be found in their [User Documentation](https://www.kubeflow.org/docs/started/getting-started/)
 
 You will also need [ksonnet](https://ksonnet.io) and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) command line tools.
 
 - Create a Kubernetes cluster. Either on-prem or on Google Cloud
 - Run the following commands to setup your ksonnet app (how you deploy Kubeflow)
 
-NOTE: Kubeflow is managed by Google's Kubeflow team, and some of the commands to deploy Kubeflow's core components may change. If Kubeflow deployments are not working following this README, refer to https://github.com/kubeflow/kubeflow.
+**NOTE:** Kubeflow is managed by Google's Kubeflow team, and some of the commands to deploy Kubeflow's core components may change. If Kubeflow deployments are not working following this README, refer to https://github.com/kubeflow/kubeflow.
 
 ```bash
 # create ksonnet app
@@ -50,34 +50,25 @@ ks registry add h2o-kubeflow <this_github_repo/h2o-kubeflow>
 ks pkg install kubeflow/core
 ks pkg install kubeflow/tf-serving
 ks pkg install kubeflow/tf-job
-ks pkg install h2o-kubeflow/h2o3-static
+ks pkg install h2o-kubeflow/h2oai
 
-# deploy core Kubeflow componentes
+# create namespace and environment for deployments
 kubectl create namespace kubeflow
-ks generate core kubeflow-core --name=kubeflow-core --namespace=kubeflow
 ks env add <my_environment_name>
-
-# skip this line if not on cloud deployment of Kubernetes
-ks param set kubeflow-core cloud gke --env=cloud
-
-ks apply <my_environment_name> -c kubeflow-core
 ```
 
-- Deploy H2O 3 by running the following commands. <location_of_docker_image> is probably a Google Container Repository with the format `gcr.io/<my_project>/<h2o3_image>:version`:
-  - NOTE:
-    - required flags `--name` [Name of Deployment] and `--model_server_image` [Docker image to use]
-    - optional flags `--memory` [amount of memory requested by each node], `--cpu` [number of cpus requested by each node], `--replicas` [number of nodes to spawn]
+- Deploy H2O 3 by running the following commands. You will first need to build a docker image of H2O-3 that can be consumed by Kubernetes. See this directory: [https://github.com/h2oai/h2o-kubeflow/tree/master/h2o-kubeflow/h2oai/dockerfiles](https://github.com/h2oai/h2o-kubeflow/tree/master/h2o-kubeflow/h2oai/dockerfiles) for necessary dockerfile and scripts. Be sure to push it to a repository that Kubernetes has pull access to.
 
 ```bash
-ks prototype use io.ksonnet.pkg.h2o3-static h2o3-static \
---name h2o3-static \
+ks prototype use io.ksonnet.pkg.h2oai-h2o3 h2o3 \
+--name h2o3 \
 --namespace kubeflow \
---memory 1 \
+--memory 2 \
 --cpu 1 \
 --replicas 2 \
 --model_server_image <location_of_docker_image>
 
-ks apply <my_environment_name> -c h2o3-static
+ks apply <my_environment_name> -c h2o3
 ```
 - run `kubectl get svc -n kubeflow` to find the External IP address.
 - Open a jupyter notebook on a local computer that has H2O installed locally.
@@ -88,7 +79,7 @@ h2o.init(port="<External IP address>", port=54321)
 ```
 - You can now follow the steps for running H2O 3 AutoML that can be found [here](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html)
 
-#### Burst to Cloud
+#### Burst to Cloud (NOT CONSISTENTLY MAINTAINED)
 
 If you are interested in additional orchestration, follow the following steps to setup a Kubernetes cluster. This walkthrough will setup a Kubernetes cluster with the ability to scale with the demand of additional resources.
 

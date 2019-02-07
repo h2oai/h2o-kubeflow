@@ -1,5 +1,5 @@
 // @apiVersion 0.1
-// @name io.ksonnet.pkg.h2o3-static
+// @name io.ksonnet.pkg.h2oai-h2o3
 // @description H2O3 on Kubeflow
 // @shortDescription H2O3 Static Cluster
 // @param name string Name to give each of the components
@@ -10,7 +10,7 @@
 // @optionalParam replicas number 1 starting number of pods
 
 local k = import 'k.libsonnet';
-local h2o3static = import 'h2o-kubeflow/h2o3-static/h2o3-static.libsonnet';
+local h2o3static = import 'h2o-kubeflow/h2oai/h2oai-h2o3.libsonnet';
 
 local name = import 'param://name';
 local namespace = import 'param://namespace';

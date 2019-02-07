@@ -1,0 +1,51 @@
+{
+  "name": "h2oai",
+  "apiVersion": "0.0.1",
+  "kind": "ksonnet.io/parts",
+  "description": "H2O.ai Core Deployments",
+  "author": "h2oai team",
+  "contributors": [
+    {
+      "name": "Nicholas Png",
+      "email": "nicholas@h2o.ai"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kubeflow/kubeflow"
+  },
+  "bugs": {
+    "url": "https://github.com/h2oai/h2o-kubeflow/issues"
+  },
+  "keywords": [
+    "kubernetes",
+    "machine learning",
+    "ai"
+  ],
+  "quickStartH2o3": {
+    "prototype": "io.ksonnet.pkg.h2oai-h2o3",
+    "componentName": "h2o3-static",
+    "flags": {
+      "name": "h2o3-static",
+      "namespace": "default",
+      "memory": 4,
+      "cpu": 1,
+      "replicas": 2,
+      "model_server_image": "<docker repository>/h2o3:latest"
+    },
+    "comment": "H2O-3 Cluster Deployment. NOTE: Use Dockerfile.h2o3 to build model_server_image."
+  },
+  "quickStartDriverlessAi": {
+    "prototype": "io.ksonnet.pkg.h2oai-driverlessai",
+    "componentName": "h2o-dai",
+    "flags": {
+      "name": "h2o-dai",
+      "namespace": "default",
+      "memory": 16,
+      "cpu": 4,
+      "gpu": 0,
+      "model_server_image": "opsh2oai/h2oai-runtime:latest"
+    },
+    "comment": "Deployment of H2O.ai Driverless AI. NOTE: Obtain docker image from docs.h2o.ai, license can be obtained by contacting sales@h2o.ai"
+  }
+}

@@ -1,5 +1,5 @@
 // @apiVersion 0.1
-// @name io.ksonnet.pkg.driverless
+// @name io.ksonnet.pkg.h2oai-driverlessai
 // @description Driverless AI on Kubeflow
 // @shortDescription Driverless AI
 // @param name string Name to give each of the components
@@ -12,7 +12,7 @@
 // @optionalParam configmap_name string null name of optional configmap containing any user config files wished to be include. Expects at least config.toml and license.sig
 
 local k = import 'k.libsonnet';
-local driverlessai = import 'h2o-kubeflow/driverless/driverless.libsonnet';
+local driverlessai = import 'h2o-kubeflow/h2oai/h2oai-driverlessai.libsonnet';
 
 local name = import 'param://name';
 local namespace = import 'param://namespace';
