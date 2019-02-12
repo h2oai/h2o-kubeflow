@@ -36,7 +36,7 @@ You will also need [ksonnet](https://ksonnet.io) and [kubectl](https://kubernete
 - Create a Kubernetes cluster. Either on-prem or on Google Cloud
 - Run the following commands to setup your ksonnet app (how you deploy Kubeflow)
 
-**NOTE:** Kubeflow is managed by Google's Kubeflow team, and some of the commands to deploy Kubeflow's core components may change. If Kubeflow deployments are not working following this README, refer to https://github.com/kubeflow/kubeflow.
+**NOTE:** Kubeflow is managed by Google's Kubeflow team, and some of the commands to deploy Kubeflow's core components may change. Refer to https://www.kubeflow.org/docs/started/getting-started/ for comprehensive steps to launch Kubeflow. The H2O Components are not dependent on Kubeflow running to be able to be deployed, but will benefit from Kubeflow's core functionality. It is recommended that you launch Kubeflow prior to starting the H2O deployments, but is not required.
 
 ```bash
 # create ksonnet app
@@ -46,10 +46,6 @@ cd <my_ksonnet_app>
 # add ksonnet registry to app containing all the kubeflow manifests as maintained by Google Kubeflow team
 ks registry add kubeflow https://github.com/kubeflow/kubeflow/tree/master/kubeflow
 # add ksonnet registry to app containing all the h2o component manifests
-ks registry add h2o-kubeflow <this_github_repo/h2o-kubeflow>
-ks pkg install kubeflow/core
-ks pkg install kubeflow/tf-serving
-ks pkg install kubeflow/tf-job
 ks pkg install h2o-kubeflow/h2oai
 
 # create namespace and environment for deployments

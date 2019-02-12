@@ -9,14 +9,14 @@
 // @optionalParam cpu string 1 number of cpu allocated for deployment
 // @optionalParam gpu number 0 number of gpu allocated for deployment
 // @optionalParam pvcSize number 50 size of persistent volume claim for deployment
-// @optionalParam configmap_name string null name of optional configmap containing any user config files wished to be include. Expects at least config.toml and license.sig
+// @optionalParam configMapName string null name of optional configmap containing any user config files wished to be include. Expects at least config.toml and license.sig
 
 local k = import 'k.libsonnet';
 local driverlessai = import 'h2o-kubeflow/h2oai/h2oai-driverlessai.libsonnet';
 
 local name = import 'param://name';
 local namespace = import 'param://namespace';
-local configmapname = import 'param://configmap_name';
+local configmapname = import 'param://configMapName';
 local memory = import 'param://memory';
 local cpu = import 'param://cpu';
 local gpu = import 'param://gpu';
