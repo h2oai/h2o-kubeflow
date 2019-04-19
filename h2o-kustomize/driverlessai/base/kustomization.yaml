@@ -1,0 +1,17 @@
+secretGenerator:
+- name: dai-deploy
+  namespace: default
+  files:
+  - .secret/license.sig
+  type: Opaque
+
+configMapGenerator:
+- name: dai-deploy
+  namespace: default
+  files:
+  - .config/config.toml
+
+commonLabels:
+  name: $(NAME)
+  namespace: $(NAMESPACE)
+  app: $(NAME)-app
