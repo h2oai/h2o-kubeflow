@@ -1,0 +1,28 @@
+bases:
+- ../../base
+
+secretGenerator:
+- name: dai-deploy
+  namespace: default
+  files:
+  - ./secret/license.sig
+  type: Opaque
+
+configMapGenerator:
+- name: dai-deploy
+  namespace: default
+  files:
+  - ./config/config.toml
+
+commonLabels:
+  app: dai-deployment-app
+
+# resources:
+# - deployment.yaml
+# - service.yaml
+# - volume.yaml
+
+patchesStrategicMerge:
+- ./patch/deployment_patch.yaml
+- ./patch/volume_patch.yaml
+- ./patch/service_patch.yaml

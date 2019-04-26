@@ -1,0 +1,18 @@
+- op: add
+  path: /spec/template/spec/containers/0/env/-
+  value:
+    name: "DRIVERLESS_AI_CONFIG_FILE"
+    value: /config/config.toml
+
+- op: add
+  path: /spec/template/spec/containers/0/volumeMounts/-
+  value:
+    mountPath: /config
+    name: myconfig
+
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: myconfig
+    configMap:
+      name: myconfig

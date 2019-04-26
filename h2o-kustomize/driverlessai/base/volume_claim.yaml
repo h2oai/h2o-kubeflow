@@ -1,12 +1,12 @@
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolumeClaim
 metadata:
   name: dai-deploy
   namespace: default
 spec:
   accessModes:
   - ReadWriteOnce
-  capacity:
-    storage: 50Gi
-  hostPath:
-    path: /opt/h2oai/dai/dai-deploy
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 50Gi

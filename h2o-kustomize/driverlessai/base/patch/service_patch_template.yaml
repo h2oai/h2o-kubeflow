@@ -1,0 +1,5 @@
+- op: replace
+  path: /metadata
+  value:
+    name: dai-deploy-161
+    namespace: default

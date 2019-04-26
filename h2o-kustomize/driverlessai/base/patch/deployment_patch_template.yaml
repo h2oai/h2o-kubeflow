@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dai-deploy-161
+  namespace: default
+spec:
+  template:
+    containers:
+    - name: dai-deploy-161
+      resources:
+        requests:
+          memory: 10Gi
+          cpu: 5
+          nvidia.com/gpu: 0
+        limits:
+          memory: 10Gi
+          cpu: 5
+          nvidia.com/gpu: 0
+      volumeMounts:
+      - mountPath: /tmp
+        name: dai-deploy-161-pvc
+      - mountPath: /log
+        name: dai-deploy-161-pvc
+    volumes:
+    - name: dai-deploy-161-pvc
+      persistentVolumeClaim:
+        claimName: dai-deploy-161

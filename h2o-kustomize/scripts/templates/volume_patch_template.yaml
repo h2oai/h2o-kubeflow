@@ -1,0 +1,13 @@
+- op: replace
+  path: /metadata
+  value:
+    name: NAME
+    namespace: NAMESPACE
+
+- op: replace
+  path: /spec/capacity/storage
+  value: STORAGE
+
+- op: replace
+  path: /spec/hostPath/path
+  value: /opt/h2oai/dai/NAME

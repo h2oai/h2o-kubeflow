@@ -3,12 +3,7 @@ kind: Deployment
 metadata:
   name: dai-deploy
   namespace: default
-  labels:
-    app: dai-deploy
 spec:
-  selector:
-    matchLabels:
-      app: dai-deploy
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -17,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: dai-deploy
+        app: driverlessai
     spec:
       containers:
       - name: dai-deploy
@@ -29,7 +24,7 @@ spec:
           protocol: TCP
         env:
         - name: DAI_START_COMMAND
-          value: if nvidia-smi | grep -o failed || true; then ./run.sh; else nvidia-smi -pm 1 && ./run.sh; fi
+          value: "if nvidia-smi | grep -o failed || true; then ./run.sh; else nvidia-smi -pm 1 && ./run.sh; fi"
         command:
         - /bin/bash
         args:
@@ -37,12 +32,12 @@ spec:
         - $(DAI_START_COMMAND)
         resources:
           requests:
-            memory: 8Gi
-            cpu: 4
+            memory: 4Gi
+            cpu: 2
             nvidia.com/gpu: 0
           limits:
-            memory: 8Gi
-            cpu: 4
+            memory: 4Gi
+            cpu: 2
             nvidia.com/gpu: 0
         volumeMounts:
         - mountPath: /tmp

@@ -1,0 +1,85 @@
+#!/bin/bash
+set -e
+
+WORKING_DIR=$PWD
+# DEFAULT SETTINGS
+MEMORY="4Gi"
+CPU="2"
+GPU="0"
+IMAGE="h2oai/dai-centos7-x86_64:1.5.4-cuda9.0"
+STORAGE="50Gi"
+NAME="dai-deploy"
+NAMESPACE="default"
+
+while [ ! $# -eq 0 ]
+do
+  case "$1" in
+    --help | -h)
+      echo "-----------------------"
+      echo "Help Menu:"
+      echo "-m | --memory) set requested memory for application in GB"
+      echo "-c | --cpu) set requested number of cpus for application"
+      echo "-g | --gpu) set requested number of gpus for application"
+      echo "-i | --image) specify docker image to use for application"
+      echo "-s | --storage) specify amount of storage to allocate to application in GB"
+      echo "-n | --name) specify name of application to be displayed"
+      echo "-ns | --namespace) specify namespace for application to operate in"
+      echo "-t | --config) name of config map to generate containing Driverless AI config.toml file"
+      echo "-l | --license) name of secret to generate containing Driverless AI license file. license.sig"
+      echo "-----------------------"
+      exit 0
+      ;;
+    --memory | -m)
+      shift
+      echo "memory is set to: $1"
+      MEMORY="${1}Gi"
+      ;;
+    --cpu | -c)
+      shift
+      echo "cpus are set to: $1"
+      CPU=$1
+      ;;
+    --gpu | -g)
+      shift
+      echo "gpus are set to: $1"
+      GPU=$1
+      ;;
+    --image | -i)
+      shift
+      echo "image is set to: $1"
+      IMAGE=$1
+      ;;
+    --storage | -s)
+      shift
+      echo "storage is set to: $1"
+      STORAGE="${1}Gi"
+      ;;
+    --name | -n)
+      shift
+      echo "application name is set to: $1"
+      NAME=$1
+      ;;
+    --namespace | -ns)
+      shift
+      echo "application namespace is set to: $1"
+      NAMESPACE=$1
+      ;;
+    --config | -t)
+      shift
+      echo "application configuration map name: $1"
+      CONFIGMAP=$1
+      ;;
+    --license | -l)
+      shift
+      echo "secret name for Driverless AI license file: $1"
+      SECRET=$1
+      ;;
+    *)
+      echo "INVALID INPUT: $1"
+      shift
+      ;;
+  esac
+  shift
+done
+
+PVC_NAME="${NAME}-pvc"

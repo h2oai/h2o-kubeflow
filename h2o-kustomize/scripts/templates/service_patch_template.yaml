@@ -1,0 +1,5 @@
+- op: replace
+  path: /metadata
+  value:
+    name: NAME
+    namespace: NAMESPACE

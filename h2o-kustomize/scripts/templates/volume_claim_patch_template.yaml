@@ -1,0 +1,9 @@
+- op: replace
+  path: /metadata
+  value:
+    name: NAME
+    namespace: NAMESPACE
+
+- op: replace
+  path: /spec/resources/requests/storage
+  value: STORAGE

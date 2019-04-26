@@ -1,0 +1,21 @@
+- op: replace
+  path: /spec/template/spec/containers/0/resources
+  value:
+    requests:
+      memory: 10Gi
+      cpu: 5
+      nvidia.com/gpu: 0
+    limits:
+      memory: 10Gi
+      cpu: 5
+      nvidia.com/gpu: 0
+
+- op: replace
+  path: /metadata
+  value:
+    name: dai-deploy-161
+    namespace: default
+
+- op: replace
+  path: /spec/template/spec/containers/0/name
+  value: dai-deploy-161

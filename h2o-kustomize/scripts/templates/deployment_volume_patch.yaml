@@ -1,0 +1,14 @@
+- op: replace
+  path: /spec/template/spec/containers/0/volumeMounts
+  value:
+    - mountPath: /tmp
+      name: PVC_NAME
+    - mountPath: /log
+      name: PVC_NAME
+
+- op: replace
+  path: /spec/template/spec/volumes
+  value:
+    - name: PVC_NAME
+      persistentVolumeClaim:
+        claimName: NAME

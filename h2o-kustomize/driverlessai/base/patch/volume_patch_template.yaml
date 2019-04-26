@@ -1,0 +1,13 @@
+- op: replace
+  path: /metadata
+  value:
+    name: dai-deploy-161
+    namespace: default
+
+- op: replace
+  path: /spec/capacity/storage
+  value: 50Gi
+
+- op: replace
+  path: /spec/hostPath/path
+  value: /opt/h2oai/dai/dai-deploy-161

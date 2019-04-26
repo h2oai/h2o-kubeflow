@@ -1,0 +1,1369 @@
+# ##############################################################################
+# ##                        DRIVERLESS AI CONFIGURATION FILE
+# #
+# # Comments:
+# # This file is authored in TOML (see https://github.com/toml-lang/toml)
+# #
+# # Config Override Chain
+# # Configuration variables for Driverless AI can be provided in several ways,
+# # the config engine reads and overides variables in the following order
+# #
+# # 1. h2oai/config/config.toml
+# # [internal not visible to users]
+# #
+# # 2. config.toml
+# # [place file in a folder/mount file in docker container and provide path
+# # in "DRIVERLESS_AI_CONFIG_FILE" environment variable]
+# #
+# # 3. Environment variable
+# # [configuration variables can also be provided as environment variables
+# # they must have the prefix "DRIVERLESS_AI_" followed by
+# # variable name in caps e.g "authentication_method" can be provided as
+# # "DRIVERLESS_AI_AUTHENTICATION_METHOD"]
+#
+#
+# ##############################################################################
+# ## Setup : Configure application server here (ip, ports, authentication, file
+# # types etc)
+#
+# # IP address and port of autoviz process.
+# vis_server_ip = "127.0.0.1"
+# vis_server_port = 12346
+#
+# # IP address and port of procsy process.
+# procsy_ip = "127.0.0.1"
+# procsy_port = 12347
+#
+# # IP address and port of H2O instance.
+# h2o_ip = "127.0.0.1"
+# h2o_port = 54321
+#
+# # IP address and port for Driverless AI HTTP server.
+# ip = "127.0.0.1"
+# port = 12345
+#
+# # File upload limit (default 100GB)
+# max_file_upload_size = 104857600000
+#
+# # Verbosity of logging
+# # 0: quiet   (CRITICAL, ERROR, WARNING)
+# # 1: default (CRITICAL, ERROR, WARNING, INFO, DATA)
+# # 2: verbose (CRITICAL, ERROR, WARNING, INFO, DATA, DEBUG)
+# log_level = 1
+#
+# # https settings
+# #
+# # You can make a self-signed certificate for testing with the following commands:
+# #
+# #     sudo openssl req -x509 -newkey rsa:4096 -keyout private_key.pem -out cert.pem -days 3650 -nodes -subj "/O=Driverless AI"
+# #     sudo chown dai:dai cert.pem private_key.pem
+# #     sudo chmod 600 cert.pem private_key.pem
+# #     sudo mv cert.pem private_key.pem /etc/dai
+# #
+# enable_https = false
+# ssl_key_file = "/etc/dai/private_key.pem"
+# ssl_crt_file = "/etc/dai/cert.pem"
+#
+# # SSL TLS
+# ssl_no_sslv2 = true
+# ssl_no_sslv3 = true
+# ssl_no_tlsv1 = true
+# ssl_no_tlsv1_1 = true
+# ssl_no_tlsv1_2 = false
+# ssl_no_tlsv1_3 = false
+#
+# # Data directory. All application data and files related datasets and
+# # experiments are stored in this directory.
+#
+# data_directory = "./tmp"
+#
+# # Whether to run quick performance benchmark at start of application
+# enable_benchmark = true
+#
+# # Whether to run quick performance benchmark at start of each experiment
+# enable_benchmark_each_experiment = false
+#
+# # Whether to run quick startup checks at start of application
+# enable_startup_checks = true
+#
+# # Whether to opt in to usage statistics and bug reporting
+# usage_stats_opt_in = false
+#
+# # Whether to verbosely log datatable calls
+# datatable_verbose_log = false
+#
+# # Whether to create the Python scoring pipeline at the end of each experiment
+# make_python_scoring_pipeline = true
+#
+# # Whether to create the MOJO scoring pipeline at the end of each experiment
+# # Note: Not all transformers or main models are available for MOJO (e.g. no gblinear main model)
+# make_mojo_scoring_pipeline = false
+#
+# # authentication_method
+# # unvalidated : Accepts user id and password, does not validate password
+# # none : Does not ask for user id or password, authenticated as admin
+# # pam :  Accepts user id and password, Validates user with operating system
+# # ldap : Accepts user id and password, Validates against an ldap server, look
+# # local: Accepts a user id and password, Validated against a htpasswd file provided in local_htpasswd_file
+# # ibm_spectrum_conductor: Authenticate with IBM conductor auth api
+# # for additional settings under LDAP settings
+# authentication_method = "unvalidated"
+#
+# # LDAP Settings - Either the Recipe 0 or Recipe 1 can be used to configure LDAP
+# # Recipe 0 : Simple authentication using UserID and Password, Does not use SSL Cert
+# # Recipe 1 : Use SSL and global credential to connect to ldap and search user in group, If user is found Authenticate using User Credentials
+#
+# # LDAP Credentials
+# ldap_recipe = "0"          # When using this recipe, needs to be set to "1"
+#
+# ldap_server = ""
+# ldap_port = ""
+# ldap_bind_dn = ""
+# ldap_bind_password = ""
+# ldap_dc = ""               # Deprecated to be removed in future releases use ldap_bin_dn, ldap_base_dn instead
+#
+# ldap_base_dn = ""
+# ldap_base_filter = ""
+# ldap_user_name_attribute = ""
+#
+# # Recipe 1
+# # Use this recipe when The below 3 step approach is required
+# # Step 1, 2: Use a machine/global credential to connect to ldap and using SSL
+# # Step 2: Using the above connections, Search for user in ldap to authorize
+# # Step 3: Authenticate using users own credentials
+# ldap_tls_file = ""        # Provide Cert file location
+# ldap_ou_dn = ""           # DN with OU where user needs to be found in search
+# ldap_search_filter = ""   # Search Filter for finding user
+# ldap_search_user_id = ""
+# ldap_search_password = ""
+# ldap_use_ssl = ""
+# ldap_user_prefix = ""  # user='ldap_user_prefix={},{}'.format(ldap_app_user_id, ldap_ou_dn) for step 1
+#
+# # Local password file
+# # Generating a htpasswd file: see syntax below
+# # htpasswd -B "<location_to_place_htpasswd_file>" "<username>"
+# # note: -B forces use of brcypt, a secure encryption method
+# local_htpasswd_file = ""
+#
+# # Supported file formats (file name endings must match for files to show up in file browser)
+# supported_file_types = "csv, tsv, txt, dat, tgz, gz, bz2, zip, xz, xls, xlsx, nff, jay, feather, bin, arff, parquet"
+#
+# # File System Support
+# # file : local file system/server file system
+# # hdfs : Hadoop file system, remember to configure the HDFS config folder path and keytab below
+# # s3 : Amazon S3, optionally configure secret and access key below
+# # gcs : Google Cloud Storage, remember to configure gcs_path_to_service_account_json below
+# # gbq : Google Big Query, remember to configure gcs_path_to_service_account_json below
+# # minio : Minio Cloud Storage, remember to configure secret and access key below
+# # snow : Snowflake Data Warehouse, remember to configure Snowflake credentials below (account name, username, password)
+# # kdb : KDB+ Time Series Database, remember to configure KDB credentials below (hostname and port, optionally: username, password, classpath, and jvm_args)
+enabled_file_systems = "file, hdfs, s3, gcs, gbq, minio, snow, kdb"
+#
+# # do_not_log_list : add configurations that you do not wish to be recorded in logs here
+# do_not_log_list = "local_htpasswd_file, aws_access_key_id, aws_secret_access_key, snowflake_password, snowflake_url, snowflake_user, snowflake_account, minio_endpoint_url, minio_access_key_id, minio_secret_access_key, kdb_user, kdb_password, ldap_bind_password, gcs_path_to_service_account_json"
+#
+# ##############################################################################
+# ## Hardware: Configure hardware settings here (GPUs, CPUs, Memory, etc.)
+#
+# # Max number of CPU cores to use per experiment. Set to <= 0 to use all cores.
+# # One can also set environment variable "OMP_NUM_THREADS" to number of cores to use for OpenMP
+# # e.g. In bash: export OMP_NUM_THREADS=32
+# max_cores = 0
+#
+# # Minimum number of threads for datatable during data munging
+# # Not 1, so that if imbalance of work, older tasks will still use this minimum number of cores
+# min_dt_threads_munging = 4
+#
+# # Like min_dt_threads_munging but for final pipeline munging
+# min_dt_threads_final_munging = 4
+#
+# # Number of GPUs to use per model training task.  Set to -1 for all GPUs.
+# # Currently num_gpus_per_model!=1 disables GPU locking, so is only recommended for single
+# # experiments and single users.
+# # Ignored if GPUs disabled or no GPUs on system.
+# # More info at: https://github.com/NVIDIA/nvidia-docker/wiki/nvidia-docker#gpu-isolation
+# num_gpus_per_model = 1
+#
+# # Number of GPUs to use per experiment for training task.  Set to -1 for all GPUs.
+# # Currently num_gpus_per_experiment!=-1 disables GPU locking, so is only recommended for single
+# # experiments and single users.
+# # Ignored if GPUs disabled or no GPUs on system.
+# # More info at: https://github.com/NVIDIA/nvidia-docker/wiki/nvidia-docker#gpu-isolation
+# num_gpus_per_experiment = -1
+#
+# # Which gpu_id to start with
+# # If using CUDA_VISIBLE_DEVICES=... to control GPUs (preferred method), gpu_id=0 is the
+# # first in that restricted list of devices.
+# # E.g. if CUDA_VISIBLE_DEVICES="4,5" then gpu_id_start=0 will refer to the
+# # device #4.
+# # E.g. from expert mode, to run 2 experiments, each on a distinct GPU out of 2 GPUs:
+# # Experiment#1: num_gpus_per_model=1, num_gpus_per_experiment=1, gpu_id_start=0
+# # Experiment#2: num_gpus_per_model=1, num_gpus_per_experiment=1, gpu_id_start=1
+# # E.g. from expert mode, to run 2 experiments, each on a distinct GPU out of 8 GPUs:
+# # Experiment#1: num_gpus_per_model=1, num_gpus_per_experiment=4, gpu_id_start=0
+# # Experiment#2: num_gpus_per_model=1, num_gpus_per_experiment=4, gpu_id_start=4
+# # E.g. Like just above, but now run on all 4 GPUs/model
+# # Experiment#1: num_gpus_per_model=4, num_gpus_per_experiment=4, gpu_id_start=0
+# # Experiment#2: num_gpus_per_model=4, num_gpus_per_experiment=4, gpu_id_start=4
+# # If num_gpus_per_model!=1, global GPU locking is disabled
+# # (because underlying algorithms don't support arbitrary gpu ids, only sequential ids),
+# # so must setup above correctly to avoid overlap across all experiments by all users
+# # More info at: https://github.com/NVIDIA/nvidia-docker/wiki/nvidia-docker#gpu-isolation
+# gpu_id_start = 0
+#
+# # Maximum number of workers for DriverlessAI server pool (only 1 needed
+# # currently)
+# max_workers = 1
+#
+# # Period (in seconds) of ping by DriverlessAI server to each experiment
+# # (in order to get logger info like disk space and memory usage)
+# # 0 means don't print anything
+# ping_period = 60
+#
+# # Minimum amount of disk space in GB needed to run experiments.
+# # Experiments will fail if this limit is crossed.
+# disk_limit_gb = 5
+#
+# # Minimum amount of system memory in GB needed to start experiments
+# memory_limit_gb = 5
+#
+# # Minimum number of rows needed to run experiments (values lower than 100
+# # might not work)
+# min_num_rows = 100
+#
+# # Precision of how data is stored and precision that most computations are performed at
+# # "float32" best for speed, "float64" best for accuracy or very large input values
+# # "float32" allows numbers up to about +-3E38 with relative error of about 1E-7
+# # "float64" allows numbers up to about +-1E308 with relative error of about 1E-16
+# data_precision = "float32"
+#
+# # Precision of some transformers, like TruncatedSVD.
+# # (Same options and notes as data_precision)
+# # Useful for higher precision in transformers with numerous operations that can accumulate error
+# # Also useful if want faster performance for transformers but otherwise want data stored in high precision
+# transformer_precision = "float32"
+#
+#
+# ##############################################################################
+# ## Machine Learning : Configure machine learning configurations here
+# # (Data, Feature Engineering, Modelling etc)
+#
+# # Seed for random number generator to make experiments reproducible (on same hardware), only active if 'reproducible' mode is enabled
+# seed = 1234
+#
+# # List of values that should be interpreted as missing values during data import. Applies both to numeric and string columns. Note that 'nan' is always interpreted as a missing value for numeric columns.
+# missing_values = "['', '?', 'None', 'nan', 'NA', 'N/A', 'unknown', 'inf', '-inf', '1.7976931348623157e+308', '-1.7976931348623157e+308']"
+#
+# # For tensorflow, what numerical value to give to missing values, where numeric values are standardized
+# # So 0 is center of distribution, and if Normal distribution then +-5 is 5 standard deviations away from the center.
+# # In many cases, an out of bounds value is a good way to represent missings, but in some cases the mean (0) may be better.
+# tf_nan_impute_value = -5
+#
+# # Internal threshold for number of rows x number of columns to trigger certain statistical
+# # techniques to increase statistical fidelity
+# statistical_threshold_data_size_small = 100000
+#
+# # Internal threshold for number of rows x number of columns to trigger certain statistical
+# # techniques that can speed up modeling
+# statistical_threshold_data_size_large = 100000000
+#
+# # Upper limit on the number of rows for feature evolution (applies to both training and validation/holdout splits)
+# # Depending on accuracy settings, a fraction of this value will be used
+# max_rows_feature_evolution = 1000000
+#
+# # Maximum number of columns
+# max_cols = 10000
+#
+# # Maximum number of columns selected out of original set of original columns, using feature selection
+# # The selection is based upon how well target encoding (or frequency encoding if not available) on categoricals and numerics treated as categoricals
+# max_orig_cols_selected = 10000
+#
+# # Maximum number of numeric columns selected, above which will do feature selection
+# max_orig_numeric_cols_selected = 10000
+#
+# # Maximum number of non-numeric columns selected, above which will do feature selection on all features and avoid num_as_cat
+# max_orig_nonnumeric_cols_selected = 500
+#
+# # Factor times max_orig_cols_selected by which selection is based upon no target encoding and no num_as_cat
+# max_orig_cols_selected_simple_factor = 2
+#
+# # Maximum allowed fraction of uniques for integer and categorical columns (otherwise will treat column as ID and drop)
+# max_relative_cardinality = 0.95
+#
+# # Maximum allowed number of uniques for integer and categorical columns (otherwise will treat column as ID and drop)
+# max_absolute_cardinality = 1000000
+#
+# # Whether to treat some numerical features as categorical
+# num_as_cat = true
+#
+# # Max number of uniques for integer/real/bool valued columns to be treated as categoricals too (test applies to first statistical_threshold_data_size_small rows only)
+# max_int_as_cat_uniques = 50
+#
+# # Number of folds for feature evolution models
+# # Increasing this will put a lower fraction of data into validation and more into training
+# # E.g. num_folds=3 means 67%/33% training/validation splits
+# # Actual value will vary for small or big data cases
+# num_folds = 3
+#
+# # Accuracy setting equal and above which enables full cross-validation during feature evolution
+# full_cv_accuracy_switch = 8
+#
+# # Accuracy setting equal and above which enables stacked ensemble as final model
+# ensemble_accuracy_switch = 5
+#
+# # Number of fold splits to use for ensemble >= 2
+# # Actual value will vary for small or big data cases
+# num_ensemble_folds = 5
+#
+# # Number of repeats for each fold
+# # (modified slightly for small or big data cases)
+# fold_reps = 1
+#
+# # For binary classification: ratio of majority to minority class equal and above which to enable undersampling
+# imbalance_ratio_undersampling_threshold = 5
+#
+# # Smart sampling method for imbalanced binary classification (only if class ratio is above the threshold provided above)
+# smart_imbalanced_sampling = false
+#
+# # Maximum number of classes
+# max_num_classes = 100
+#
+# # Number of actuals vs. predicted to generate
+# num_actuals_vs_predicted = 100
+#
+# # Whether to use H2O.ai brain, the local caching and smart re-use of prior models to generate features for new models
+# #  Will use H2O.ai brain cache if cache file has no extra column names per column type,
+# #  cache exactly matches classes, class labels, and time series options,
+# #  interpretability of cache is equal or lower,
+# #  main model (booster) is allowed by new experiment
+# # Level of brain to use (for chosen level, where higher levels will also do all lower level operations automatically)
+# # -1 = Don't use any brain cache and don't write any cache
+# #  0 = Don't use any brain cache but still write cache
+# #      Use case: Want to save model for later use, but want current model to be built without any brain models
+# #  1 = smart checkpoint if passed in old experiment_id to pull from (via GUI, running "restart from checkpoint" or chose which experiment to resume from)
+# #      Use case: From GUI select prior experiment using the right-hand panel, and select "RESTART FROM LAST CHECKPOINT" to use specific experiment's model to build new models from
+# #  2 = smart checkpoint from H2O.ai brain cache of individual best models
+# #      Use case: No need to select a particular prior experiment, we scan through H2O.ai brain cache for best models to restart from
+# #  3 = smart checkpoint like level #1, but for entire population.  Tune only if brain population insufficient size
+# #      (will re-score entire population in single iteration, so appears to take longer to complete first iteration)
+# #  4 = smart checkpoint like level #2, but for entire population.  Tune only if brain population insufficient size
+# #      (will re-score entire population in single iteration, so appears to take longer to complete first iteration)
+# #  5 = like #4, but will scan over entire brain cache of populations to get best scored individuals, starting from resumed experiment if chosen.
+# #      (can be slower due to brain cache scanning if big cache)
+# # Other use cases:
+# # a) Re-build on different data: Use same column names and fewer or more rows (applicable to 1 - 5)
+# # b) Re-fit only final pipeline: Like (a), but choose time=1 and feature_brain_level=3 - 5
+# # c) Re-build on more columns: Add columns, so model builds upon old model built from old column names (1 - 5)
+# feature_brain_level = 2
+#
+# # Maximum number of brain individuals pulled from H2O.ai brain cache for feature_brain_level=1, 2
+# max_num_brain_indivs = 3
+#
+# # Directory, relative to data_directory, to store H2O.ai brain meta model files
+# brain_rel_dir = "H2O.ai_brain"
+#
+# # Maximum size in bytes the brain will store
+# # -1: unlimited
+# # >=0 number of GB to limit brain to
+# brain_max_size_GB = 20
+#
+# # Whether to enable early stopping
+# early_stopping = true
+#
+# # Minimum number of DAI iterations
+# # Can be used for restarting when know want to continue for longer despite score not improving.
+# min_dai_iterations = 0
+#
+# # Maximum features per model (and each model within the final model if ensemble) kept just after scoring them
+# # Keeps top varaible importance features, prunes rest away, after each scoring.
+# # Final ensemble will exclude any pruned-away features and only train on kept features,
+# #   but may contain a few new features due to fitting on different data view
+# # Final scoring pipeline will exclude any pruned-away features,
+# #   but may contain a few new features due to fitting on different data view
+# # -1 means no restrictions except internally-determined memory restrictions
+# nfeatures_max = -1
+#
+# # How much effort to spend on feature engineering (0...10)
+# # Heuristic combination of various developer-level toml parameters
+# # 0   : keep only numeric features, only model tuning during evolution
+# # 1   : keep only numeric features and frequency-encoded categoricals, only model tuning during evolution
+# # 2-3 : Like #1 but some model and feature tuning during evolution.  No Text features.
+# # 4   : Like #5, but slightly more focused on model tuning
+# # 5   : Default.  Balanced feature-model tuning
+# # 6-7 : Like #5, but slightly more focused on feature engineering
+# # 8   : Like #6-7, but even more focused on feature engineering with high feature generation rate, no feature dropping even if high interpretability
+# # 9-10: Like #8, but no model tuning during feature evolution
+# feature_engineering_effort = 5
+#
+# # Threshold for average string-is-text score as determined by internal heuristics
+# # Higher values will favor string columns as categoricals, lower values will favor string columns as text
+# string_col_as_text_threshold = 0.3
+#
+# # Mininum fraction of uniques for string columns to be considered as possible text (otherwise categorical)
+# string_col_as_text_min_relative_cardinality = 0.1
+#
+# # Mininum number of uniques for string columns to be considered as possible text (otherwise categorical)
+# string_col_as_text_min_absolute_cardinality = 100
+#
+# # Interpretability setting equal and above which will use monotonicity constraints in GBM
+# monotonicity_constraints_interpretability_switch = 7
+#
+# # Maximum number of input columns to use to generate new features
+# max_feature_interaction_depth = 8
+#
+# # When parameter tuning, choose 2**(parameter_tune_level + parameter_tuning_offset) models to tune
+# # Can make this lower to avoid excessive tuning, or make higher to do
+# # enhanced tuning
+# parameter_tuning_offset = 2
+#
+# # Accuracy setting equal and above which enables tuning of target transform for regression
+# tune_target_transform_accuracy_switch = 3
+#
+# # Whether to automatically select target transformation for regression problems
+# # Can choose: 'identity' to disable any transformation
+# # Use tune_target_transform_accuracy_switch=11 to force to always use this choice
+# target_transformer = 'auto'
+#
+# # Accuracy setting equal and above which enables tuning of model parameters
+# tune_parameters_accuracy_switch = 3
+#
+# # Tournament style
+# # "auto" : Choose based upon accuracy, etc.
+# # "fullstack" : Choose among optimal model and feature types
+# # "uniform" : all individuals in population compete to win as best
+# # "model" : individuals with same model type compete
+# # "feature" : individuals with similar feature types compete
+# # "model" and "feature" styles preserve at least one winner for each type (and so 2 total indivs of each type after mutation)
+# tournament_style = "auto"
+#
+# # Interpretability above which will use "uniform" tournament style
+# tournament_uniform_style_interpretability_switch = 6
+#
+# # Accuracy below which will use uniform style if tournament_style = "auto" (regardless of other accuracy tournament style switch values)
+# tournament_uniform_style_accuracy_switch = 6
+#
+# # Accuracy equal and above which uses model style if tournament_style = "auto"
+# tournament_model_style_accuracy_switch = 6
+#
+# # Accuracy equal and above which uses feature style if tournament_style = "auto"
+# tournament_feature_style_accuracy_switch = 7
+#
+# # Accuracy equal and above which uses fullstack style if tournament_style = "auto"
+# tournament_fullstack_style_accuracy_switch = 8
+#
+# # number of individuals at accuracy 1 (i.e. models built per iteration, which compete in feature evolution)
+# # 4 times this default for accuracy 10
+# # If using GPUs, restricted so always 1 model scored per GPU per iteration
+# # (modified slightly for small or big data cases)
+# num_individuals = 2
+#
+# # set fixed number of individuals (if > 0) - useful to compare different hardware configurations
+# fixed_num_individuals = 0
+#
+# # set fixed number of folds (if > 0) - useful for quick runs regardless of data
+# fixed_num_folds = 0
+#
+# # set fixed number of fold reps (if > 0) - useful for quick runs regardless of data
+# fixed_fold_reps = 0
+#
+# # set true to force only first fold for models - useful for quick runs regardless of data
+# fixed_only_first_fold_model = false
+#
+# # number of unique targets or folds counts after which switch to faster/simpler non-natural sorting and print outs
+# sanitize_natural_sort_limit = 1000
+#
+# # Whether target encoding is generally enabled
+# enable_target_encoding = true
+#
+# # Black list of transformers (i.e. transformers to not use, independent of
+# # the interpretability setting)
+# # for multi-class: "['NumCatTETransformer', 'TextLinModelTransformer',
+# # 'FrequentTransformer', 'CVTargetEncodeF', 'ClusterDistTransformer',
+# # 'WeightOfEvidenceTransformer', 'TruncSVDNumTransformer', 'CVCatNumEncodeF',
+# # 'DatesTransformer', 'TextTransformer', 'FilterTransformer',
+# # 'NumToCatWoETransformer', 'NumToCatTETransformer', 'ClusterTETransformer',
+# # 'BulkInteractionsTransformer']"
+# #
+# # for regression/binary: "['TextTransformer', 'ClusterDistTransformer',
+# # 'FilterTransformer', 'TextLinModelTransformer', 'NumToCatTETransformer',
+# # 'DatesTransformer', 'WeightOfEvidenceTransformer', 'BulkInteractionsTransformer',
+# # 'FrequentTransformer', 'CVTargetEncodeF', 'NumCatTETransformer',
+# # 'NumToCatWoETransformer', 'TruncSVDNumTransformer', 'ClusterTETransformer',
+# # 'CVCatNumEncodeF']"
+# #
+# # This list appears in the experiment logs (search for "Transformers used")
+# # e.g. to disable all Target Encoding: black_list_transformers =
+# # "['NumCatTETransformer', 'CVTargetEncodeF', 'NumToCatTETransformer',
+# # 'ClusterTETransformer']"
+# black_list_transformers = ""
+#
+# # Black list of genes (i.e. genes (built on top of transformers) to not use,
+# # independent of the interpretability setting)
+# #
+# # for multi-class: "['BulkInteractionsGene', 'WeightOfEvidenceGene',
+# # 'NumToCatTargetEncodeSingleGene', 'FilterGene', 'TextGene', 'FrequentGene',
+# # 'NumToCatWeightOfEvidenceGene', 'NumToCatWeightOfEvidenceMonotonicGene', '
+# # CvTargetEncodeSingleGene', 'DateGene', 'NumToCatTargetEncodeMultiGene', '
+# # DateTimeGene', 'TextLinRegressorGene', 'ClusterIDTargetEncodeSingleGene',
+# # 'CvCatNumEncodeGene', 'TruncSvdNumGene', 'ClusterIDTargetEncodeMultiGene',
+# # 'NumCatTargetEncodeMultiGene', 'CvTargetEncodeMultiGene', 'TextLinClassifierGene',
+# # 'NumCatTargetEncodeSingleGene', 'ClusterDistGene']"
+# #
+# # for regression/binary: "['CvTargetEncodeSingleGene', 'NumToCatTargetEncodeSingleGene',
+# # 'CvCatNumEncodeGene', 'ClusterIDTargetEncodeSingleGene', 'TextLinRegressorGene',
+# # 'CvTargetEncodeMultiGene', 'ClusterDistGene', 'FilterGene', 'DateGene',
+# # 'ClusterIDTargetEncodeMultiGene', 'NumToCatTargetEncodeMultiGene',
+# # 'NumCatTargetEncodeMultiGene', 'TextLinClassifierGene', 'WeightOfEvidenceGene',
+# # 'FrequentGene', 'TruncSvdNumGene', 'BulkInteractionsGene', 'TextGene',
+# # 'DateTimeGene', 'NumToCatWeightOfEvidenceGene',
+# # 'NumToCatWeightOfEvidenceMonotonicGene', ''NumCatTargetEncodeSingleGene']"
+# #
+# # This list appears in the experiment logs (search for "Genes used")
+# # e.g. to disable bulk interaction gene, use:  black_list_genes =
+# #"['BulkInteractionsGene']"
+# black_list_genes = ""
+#
+# # Parameters for LightGBM to override DAI parameters
+# # parameters shoudld be given as XGBoost equivalent unless unique LightGBM parameter
+# # e.g. params_lightgbm = "{'objective': 'binary:logistic', 'n_estimators': 100, 'max_leaves': 64, 'random_state': 1234}"
+# # e.g. params_lightgbm = {'n_estimators': 600, 'learning_rate': 0.1, 'reg_alpha': 0.0, 'reg_lambda': 0.5, 'gamma': 0, 'max_depth': 0, 'max_bin': 128, 'max_leaves': 256, 'scale_pos_weight': 1.0, 'max_delta_step': 3.469919910597877, 'min_child_weight': 1, 'subsample': 0.9, 'colsample_bytree': 0.3, 'tree_method': 'gpu_hist', 'grow_policy': 'lossguide', 'min_data_in_bin': 3, 'min_child_samples': 5, 'early_stopping_rounds': 20, 'num_classes': 2, 'objective': 'binary:logistic', 'eval_metric': 'logloss', 'random_state': 987654, 'early_stopping_threshold': 0.01, 'monotonicity_constraints': False, 'silent': True, 'debug_verbose': 0, 'subsample_freq': 1}"
+# # avoid including "system"-level parameters like 'n_gpus': 1, 'gpu_id': 0, , 'n_jobs': 1, 'booster': 'lightgbm'
+# # also likely should avoid parameters like: 'objective': 'binary:logistic', unless one really knows what one is doing (e.g. alternative objectives)
+# # See: https://xgboost.readthedocs.io/en/latest/parameter.html
+# # And see: https://github.com/Microsoft/LightGBM/blob/master/docs/Parameters.rst
+# params_lightgbm = "{}"
+#
+# # Parameters for XGBoost to override DAI parameters
+# # similar parameters as lightgbm since lightgbm parameters are transcribed from xgboost equivalent versions
+# # e.g. params_xgboost = "{'n_estimators': 100, 'max_leaves': 64, 'max_depth': 0, 'random_state': 1234}"
+# # See: https://xgboost.readthedocs.io/en/latest/parameter.html
+# params_xgboost = "{}"
+#
+# # Parameters for Tensorflow to override DAI parameters
+# # e.g. params_tensorflow = "{'lr': 0.01, 'add_wide': False, 'add_attention': True, 'epochs': 30, 'layers': (100, 100), 'activation': 'selu', 'batch_size': 64, 'chunk_size': 1000, 'dropout': 0.3, 'strategy': 'one_shot', 'l1': 0.0, 'l2': 0.0, 'ort_loss': 0.5, 'ort_loss_tau': 0.01, 'normalize_type': 'streaming'}"
+# # See: https://keras.io/ , e.g. for activations: https://keras.io/activations/
+# # Example layers: (500, 500, 500), (100, 100, 100), (100, 100), (50, 50)
+# # Strategies: '1cycle' or 'one_shot', See: https://github.com/fastai/fastai
+# # normalize_type: 'streaming' or 'global' (using sklearn StandardScaler)
+# params_tensorflow = "{}"
+#
+# # Parameters for XGBoost's gblinear to override DAI parameters
+# # e.g. params_gblinear = "{'n_estimators': 100}"
+# # See: https://xgboost.readthedocs.io/en/latest/parameter.html
+# params_gblinear = "{}"
+#
+# # Parameters for Rulefit to override DAI parameters
+# # e.g. params_rulefit = "{'max_leaves': 64}"
+# # See: https://xgboost.readthedocs.io/en/latest/parameter.html
+# params_rulefit = "{}"
+#
+# # Whether to enable XGBoost models (auto/on/off)
+# enable_xgboost = "auto"
+#
+# # Internal threshold for number of rows x number of columns to trigger no xgboost models due to high memory use
+# xgboost_threshold_data_size_large = 100000000
+#
+# # Internal threshold for number of rows x number of columns to trigger no xgboost models due to limits on GPU memory capability
+# xgboost_gpu_threshold_data_size_large = 30000000
+#
+# # Whether to enable GLM models (auto/on/off)
+# enable_glm = "auto"
+#
+# # Whether to enable LightGBM models (auto/on/off)
+# enable_lightgbm = "auto"
+#
+# # Whether to enable Random Forest (in LightGBM package) models (auto/on/off/only)
+# enable_rf = "auto"
+#
+# # Maximum number of GBM trees or GLM iterations
+# # Early-stopping usually chooses less
+# max_nestimators = 3000
+#
+# # Maximum tree depth (and corresponding max max_leaves as 2**max_max_depth)
+# max_max_depth = 12
+#
+# # Maximum max_bin for any tree
+# max_max_bin = 256
+#
+# # Minimum max_bin for any tree
+# min_max_bin = 32
+#
+# # Factor by which rf gets more depth than gbdt
+# factor_rf = 1.5
+#
+# # Upper limit on learning rate for GBM models
+# max_learning_rate = 0.5
+#
+# # Lower limit on learning rate for feature engineering GBM models
+# min_learning_rate = 0.05
+#
+# # Lower limit on learning rate for final ensemble GBM models
+# min_learning_rate_final = 0.01
+#
+# # Whether to enable TensorFlow models (alpha) (auto/on/off)
+# enable_tensorflow = "off"
+#
+# # Max. number of epochs for TensorFlow models
+# tensorflow_max_epochs = 100
+#
+# # Max. number of epochs for TensorFlow NLP feature models
+# tensorflow_max_epochs_nlp = 2
+#
+# # Whether to force tensorflow on no matter any conditions
+# enable_tensorflow_force = false
+#
+# # Whether to use NLP recipe if tensorflow enabled
+# enable_tensorflow_nlp = true
+#
+# # Whether to enable RuleFit support (alpha) (auto/on/off)
+# enable_rulefit = "off"
+#
+# # Max number of rules to be used for RuleFit models (-1 for all)
+# rulefit_max_num_rules = 100
+#
+# # Max tree depth for RuleFit models
+# rulefit_max_tree_depth = 6
+#
+# # Max number of trees for RuleFit models
+# rulefit_max_num_trees = 50
+#
+# # Internal threshold for number of rows x number of columns to trigger no rulefit models due to being too slow currently
+# rulefit_threshold_data_size_large = 1000000
+#
+# # Enable One-Hot-Encoding (which does binning to limit to number of bins to no more than 100 anyway) for categorical columns with fewer than this many unique values
+# # Set to 0 to disable
+# one_hot_encoding_cardinality_threshold = 50
+#
+# # Enable time series recipe
+# time_series_recipe = true
+#
+# # earliest datetime for automatic conversion of integers in %Y%m%d format to a time column during parsing
+# min_ymd_timestamp = 19700101
+#
+# # lastet datetime for automatic conversion of integers in %Y%m%d format to a time column during parsing
+# max_ymd_timestamp = 20300101
+#
+# # maximum number of data samples (randomly selected rows) for date/datetime format detection
+# max_rows_datetime_format_detection = 100000
+#
+# # Whether to enable train/valid and train/test distribution shift detection
+# check_distribution_shift = true
+#
+# # Whether to only check certain features based upon the value of shift_key_features_varimp
+# check_reduced_features = true
+#
+# # Number of trees to use to train model to check shift in distribution
+# # No larger than max_nestimators
+# shift_trees = 100
+#
+# # The value of max_bin to use for trees to use to train model to check shift in distribution
+# shift_max_bin = 256
+#
+# # The value of max_depth to use for trees to use to train model to check shift in distribution
+# shift_max_depth = 4
+#
+# # Normalized training variable importance above which to check the feature for shift
+# # Useful to avoid checking likely unimportant features
+# shift_key_features_varimp = 0.01
+#
+# # If distribution shift detection is enabled, show features for which shift AUC is above this value
+# # (AUC of a binary classifier that predicts whether given feature value belongs to train or test data)
+# detect_features_distribution_shift_threshold_auc = 0.55
+#
+# # If distribution shift detection is enabled, drop features for which shift AUC is above this value
+# # (AUC of a binary classifier that predicts whether given feature value belongs to train or test data)
+# drop_features_distribution_shift_threshold_auc = 0.6
+#
+# # Minimum number of features to keep, keeping least shifted feature at least if 1
+# drop_features_distribution_shift_min_features = 1
+#
+# # Whether to trace detect_types call for each batch
+# trace_detect_types = false
+#
+# # Whether to trace fit_transform during scoring of population for each transformer
+# trace_fit_transform = true
+#
+# # Whether to trace final model fit_transforms and any pipeline calls for each transformer
+# trace_final_fit_transform = true
+#
+# # Whether to trace final model transforms and any pipeline calls
+# trace_final_transform = true
+#
+# # How close to the optimal value (usually 1 or 0) does the validation score need to be to be considered perfect (to stop the experiment)?
+# abs_tol_for_perfect_score = 1e-4
+#
+# # When number of rows are above this limit sample for MLI for scoring UI data
+# mli_sample_above_for_scoring = 1000000
+#
+# # When number of rows are above this limit sample for MLI for training surrogate models
+# mli_sample_above_for_training = 100000
+#
+# # When sample for MLI how many rows to sample
+# mli_sample_size = 100000
+#
+# # how many bins to do quantile binning
+# mli_num_quantiles = 10
+#
+# # mli random forest number of trees
+# mli_drf_num_trees = 100
+#
+# # mli random forest max depth
+# mli_drf_max_depth = 20
+#
+# # not only sample training, but also sample scoring
+# mli_sample_training = true
+#
+# # regularization strength for k-LIME GLM's
+# klime_lambda = [1e-6, 1e-8]
+# klime_alpha = 0.0
+#
+# # mli converts numeric columns to enum when cardinality is <= this value
+# mli_max_numeric_enum_cardinality = 25
+#
+# # Maximum number of features allowed for k-LIME k-means clustering
+# mli_max_number_cluster_vars = 6
+#
+# #Use all columns for k-LIME k-means clustering (this will override `mli_max_number_cluster_vars` if set to `true`
+# use_all_columns_klime_kmeans = false
+#
+# #Strict version check for MLI
+# mli_strict_version_check = true
+#
+# #MLI cloud name
+# mli_cloud_name = ""
+#
+# ##############################################################################
+# ## Machine Learning Output : What kinds of files are written related to the machine learning process
+#
+# # Whether to dump every scored individual's variable importance (both derived and original) to csv/tabulated/json file
+# # produces files like: individual_id%d.iter%d*features*
+# dump_varimp_every_scored_indiv = false
+#
+# # Whether to dump every scored individual's model parameters to csv/tabulated file
+# # produces files like: individual_id%d.iter%d*params*
+# dump_modelparams_every_scored_indiv = false
+#
+# # Location of the AutoDoc template
+# autodoc_template = "report_template.md"
+#
+# # Whether to compute training, validation, and test correlation matrix (table and heatmap pdf) and save to disk
+# # alpha: currently single threaded and slow for many columns
+# compute_correlation = false
+#
+# # Whether to dump to disk a correlation heatmap
+# produce_correlation_heatmap = false
+#
+# # Value to report high correlation between original features
+# high_correlation_value_to_report = 0.95
+#
+# ##############################################################################
+# ## Connectors : Configure connector specifications here
+# ## Note that if using Kerberos, be sure that the DAI time
+# ## is synched with the Kerberos server.
+#
+# # Configurations for a HDFS data source
+# # Path of hdfs coresite.xml
+# # core_site_xml_path is deprecated, please use hdfs_config_path
+# core_site_xml_path = ""
+#
+# # HDFS config folder path , can contain multiple config files
+# hdfs_config_path = ""
+#
+# # Path of the principal key tab file
+# key_tab_path = ""
+#
+# # HDFS connector
+# # Auth type can be Principal/keytab/keytabPrincipal
+# # Specify HDFS Auth Type, allowed options are:
+# #   noauth : No authentication needed
+# #   principal : Authenticate with HDFS with a principal user
+# #   keytab : Authenticate with a Key tab (recommended). If running
+# #             DAI as a service, then the Kerberos keytab needs to
+# #             be owned by the DAI user.
+# #   keytabimpersonation : Login with impersonation using a keytab
+# hdfs_auth_type = "noauth"
+#
+# # Kerberos app principal user (recommended)
+# hdfs_app_principal_user = ""
+# # Specify the user id of the current user here as user@realm
+# hdfs_app_login_user = ""
+#
+# # JVM args for HDFS distributions, provide args seperate by space
+# # -Djava.security.krb5.conf=<path>/krb5.conf
+# # -Dsun.security.krb5.debug=true
+# # -Dlog4j.configuration=file:///<path>log4j.properties
+# hdfs_app_jvm_args = ""
+# # hdfs class path
+# hdfs_app_classpath = ""
+#
+# # AWS authentication settings
+# #   True : Authenticated connection
+# #   False : Unverified connection
+# aws_auth = "False"
+#
+# # S3 Connector credentials
+# aws_access_key_id = ""
+# aws_secret_access_key = ""
+#
+# # Starting S3 path displayed in UI S3 browser
+# s3_init_path = "s3://h2o-public-test-data/smalldata/"
+#
+# # GCS Connector credentials
+# # example (suggested) -- "/licenses/my_service_account_json.json"
+gcs_path_to_service_account_json = "/jenkins_gcs_gbq_test_auth.json"
+#
+# # Minio Connector credentials
+minio_endpoint_url = "http://minio-server:9000"
+minio_access_key_id = "fq6}bIA9mgx2|x?D"
+minio_secret_access_key = "fq6}bIA9mgx2|x?D"
+#
+# # Snowflake Connector credentials
+# # Recommended Provide: url, user, password
+# # Optionally Provide: account, user, password
+# # Example URL: https://<snowflake_account>.<region>.snowflakecomputing.com
+# snowflake_url = ""
+snowflake_account = "zp63070"
+snowflake_user = "h2oai"
+snowflake_password = "Ops@0xdata"
+#
+# # KDB Connector credentials
+kdb_user = ""
+kdb_password = ""
+kdb_hostname = "kdbserver"
+kdb_port = "5001"
+# kdb_app_classpath = ""
+# kdb_app_jvm_args = ""
+#
+# # Notification scripts
+# # - the variable points to a location of script which is executed at given event in experiment lifecycle
+# # - the script should have executable flag enabled
+# # - use of absolute path is suggested
+# # The on experiment start notification script location
+# listeners_experiment_start = ""
+# # The on experiment finished notification script location
+# listeners_experiment_done = ""
+#
+# ##############################################################################
+# ## END
+#
+#
+#
+#
+#
+#
+# ##############################################################################
+# ## INTERNAL DEVELOPER-LEVEL SETTINGS - FOR DEBUGGING ONLY
+#
+# # Whether to show developer settings in logs
+# show_developer_settings = false
+#
+# # Type of GPU locking
+# # "global" : lock GPU usage experiments in DAI
+# # "experiment" : lock GPU usage within the experiment (with per-experiment control of locking)
+# # "none": No locking, but at least cycle through gpu_id's for each submitted job
+# # Enabling tensorflow changes global->experiment locking because predictions use all GPUs currently.
+# gpu_locking_type = "global"
+#
+# # Start HTTP server in debug mode (DO NOT enable in production).
+# debug = false
+#
+# # Whether to include DEBUG log level in output to stdout
+# debug_log = false
+#
+# # Whether to print verbose debug information via print_debug()
+# debug_print = false
+#
+# # Whether to print some minimal verbose debug information via print_debug_server()
+# debug_print_server = false
+#
+# # Whether to enable hard asserts (more rigorous, sometimes expensive checks)
+# hard_asserts = false
+#
+# # Whether to funnel sub-process verbose debug information to separate files per function call
+# enable_funnel = false
+#
+# # Whether to funnel prints to files (false) or to /dev/null (true)
+# quiet_funnel = true
+#
+# # Whether to debug gene class via extra printed output
+# debug_ga = false
+#
+# # Whether to debug individual class via extra printed output
+# debug_indiv = false
+#
+# # Debug level for xgb debugging
+# # 0 = none
+# # 1 = check imports
+# # 2 = output pickles/scripts for xgb train and predict and remove if successful
+# # 3 = like #2 but never remove
+# debug_xgb_level = 0
+#
+# # Reference memory in bytes for computing heuristic workers and tasks for pools
+# memory_ref = 137438953472
+# rows_ref = 2000000
+#
+# # Number of rows ...
+# stalled_time_nrows_ref = 1000000
+# # ... or rows*columns to indicate stall ...
+# stalled_time_nrowscols_ref = 10000000
+# # ... in proportion to amount of time (in seconds) before dumping stack of processes stalling
+# # (reference time is scaled by train data shape (rows*cols) to get used stalled_time)
+# stalled_time_ref = 240.0
+# # ... down to a minimum time of
+# stalled_time_min = 120.0
+#
+# # Amount of time to stall (in seconds) before killing the job (assumes it hung)
+# # (reference time is scaled by train data shape of rows * cols to get used stalled_time_kill)
+# stalled_time_kill_ref = 440.0
+#
+# # Amount of CPU usage below which to assume process pool hung, once pool run for more than stalled_time_kill
+# stalled_pool_cpu_percent_threshold_kill = 20.0
+#
+# # Amount of GPU usage below which to assume process pool (doing GPU work) hung, once pool run for more than stalled_time_kill
+# stalled_pool_gpu_percent_threshold_kill = 20.0
+#
+# # Period over which each process cores percent usage is checked for stalling ...
+# cpu_percent_check_period_stalled=0.3
+# # ... for for logging
+# cpu_percent_per_experiment_check_period_logging=0.1
+# # (for stall check and logging output)
+# # interval~1 is not too big a delay unless many cores
+#
+# # Number of elements to use to take max over to get cpu and gpu percent usage for stall check
+# cpu_gpu_stall_max_count = 5
+#
+# # How many times to try call_subprocess_onetask() and other functions using the pool of workers, in case broken pool or other exception
+# onetask_trials = 2
+#
+# # Proctitle Markers for items used to indicate if pool should be used to check stalls/hangs for killing them
+# #pool_mark = "_pOoLmArK_"
+# pool_mark = "_"
+# #acquire_mark = "AcquireGPUs"
+# acquire_mark = "+"
+#
+# # Whether to launch xgb calls in subprocess so child never runs xgb from parent that already had xgb imported
+# # To avoid hangs related to some cuda context/reference/openmp/etc. issues
+# # If set to false, currently get SIGABRT due to actually-needed parallel sub-processes (for speed) fail
+# xgb_in_subprocess = true
+#
+# # Whether to enable time estimate in preview
+# enable_preview_time_estimate = true
+#
+# # Whether to enable time estimate in preview but only show rough estimate
+# enable_preview_time_estimate_rough = true
+#
+# # Whether to enable pickled estimate of xgboost memory usage
+# xgb_memory_pickled_estimate = false
+#
+# # Debug level for h2o4gpu debugging
+# # 0 = none
+# # 1+ = level passed into h2o4gpu
+# debug_h2o4gpu_level = 0
+#
+# # Whether to enable h2o4gpu KMeans
+# enable_h2o4gpu_kmeans = false
+#
+# # Whether to enable h2o4gpu TruncatedSVD
+# enable_h2o4gpu_truncatedsvd = false
+#
+# # Whether to use GPU for prediction
+# use_gpu_for_prediction = false
+#
+# # Minimum and maximum number of bootstrap samples to use for estimating score and its standard deviation
+# # Actual number of bootstrap samples will vary between the min and max,
+# # depending upon row count (more rows, fewer samples) and accuracy settings (higher accuracy, more samples)
+# min_bootstrap_samples = 4
+# max_bootstrap_samples = 100
+#
+# # Minimum and maximum fraction of row size to take as sample size for bootstrap estimator
+# # Actual sample size used for bootstrap estimate will vary between the min and max,
+# # depending upon row count (more rows, smaller sample size) and accuracy settings (higher accuracy, larger sample size)
+# min_bootstrap_sample_size_factor = 1.0
+# max_bootstrap_sample_size_factor = 10.0
+#
+# # Period (in seconds) between checking memory usage
+# ping_check_period_memory = 5
+#
+# # Period (in seconds) between checking CPU and GPU percent usage
+# ping_check_period_usage = 5
+#
+# # Period (in seconds) between checking open files
+# ping_check_period_files = 10
+#
+# # Threshold of rows * columns for which GPUs are disabled for speed purposes
+# gpu_small_data_size = 100000
+#
+# # Maximum number of rows for backend tuning (GPU vs CPU) (only a quick system check)
+# max_rows_tuning = 1000
+#
+# # Benford's law: mean absolute deviance threshold equal and above which integer valued columns are treated as categoricals too
+# benford_mad_threshold_int = 0.02
+#
+# # Benford's law: mean absolute deviance threshold equal and above which real valued columns are treated as categoricals too
+# benford_mad_threshold_real = 0.05
+#
+# # relative standard deviation of hold-out score below which early stopping
+# # is triggered for accuracy~5
+# stop_early_rel_std = 0.1
+#
+# # Variable importance below which feature is dropped (with possible
+# # replacement found that is better)
+# # This also sets overall scale for lower interpretability settings
+# varimp_threshold_at_interpretability_10 = 0.05
+#
+# # Interpretability setting equal and above which may try FS feature selection strategy
+# # Note: Features that are highly correlated with target will be selected by FS strategy,
+# # and that may leave other features not being selected due to being unnecessary for prediction.
+# fs_interpretabilty_switch = 6
+#
+# # Whether to prune FS non-selected features by genes or features
+# # by features exactly chooses to drop those FS didn't select, which may lead to overfitting
+# # by genes can remove important features if gene created low-importance features, which may lead to underfitting
+# fs_prune_by_genes = false
+#
+# # factor to multiply varimp_threshold_at_interpretability_10,
+# # by to get varimp threshold for strategy=FS dropping of features
+# # Generally, can be more strict in what features allowed
+# varimp_fspermute_factor = 1.0
+#
+# # Maximum number of rows to use for strategy=FS feature selection step
+# max_rows_fs = 1000000
+#
+# # Minimum/Maximum genes/transformations per individual.
+# # -1 means no restrictions except internally-determined memory restrictions
+# ngenes_min = -1
+# ngenes_max = -1
+#
+# # Minimum features per model
+# # -1 means no restrictions except internally-determined memory restrictions
+# nfeatures_min = -1
+#
+# # Assumed average features per gene(transformer) when limiting gene counts.
+# # Issue is some transformers, like for text, can create many (hundreds of) derived features
+# # Semi-aggressively allow features by using features_per_gene = 1
+# # Very aggressive (try to fill GPU and rely upon GPU OOM protection) by using features_per_gene = 0.5
+# features_per_gene = 1
+#
+# # Factor by which the automatically-determined nfeatures_max is multiplied
+# # The estimate we use is reasonably good, so 1.0 is reasonable
+# # nfeatures_max_factor = 2.0 can be used for aggressive feature generation that relies upon GPU OOM protection.
+# nfeatures_max_factor = 1.0
+#
+# # Whether to use unit pool protection against OOM etc.
+# # Renews cuda context every time, so good for smallish data (especially on many-GPU systems)
+# use_unit_pool_protection = true
+#
+# # Whether to always use unit pool protection against OOM etc.
+# # So set to false by default, and uses a trigger threshold trigger_subprocess_catch_rows_times_columns
+# always_use_unit_pool_protection = false
+#
+# # product of rows*cols for which to trigger extra subprocess to catch GPU OOM
+# trigger_subprocess_catch_rows_times_columns = 10000000
+#
+# # Whether to save model, delete model, load model, delete file to ensure model off GPU
+# # WIP: This doesn't actually work, xgb stays on GPU for some reason
+# strict_gpu_non_overlap = false
+#
+# # Whether to preserve pool across iterations (false) or terminate the pool every iteration (true)
+# # Useful for debugging gpu locking (i.e. set all to true to avoid cuda context confusion)
+# terminate_train_backend_tuning = true
+# terminate_train_tuning = true
+# terminate_train_feature_evolution = true
+#
+# # When hit OOM, reduce by genes (true) or features (false)
+# reduce_by_genes = false
+#
+# # Fraction of genes (if reduce_by_genes=true) or derived(transformer-generated) features (if reduce_by_genes=false) to keep for model training
+# # Can reduce likelihood of running into memory issues during training
+# keep_fraction_default = 1.0
+#
+# # When hit OOM reduce, randomly select (true) or remove most-recently added genes or features (false)
+# # randomly good option if expect commonly occurring, while non-random is good if exceptional occurrence
+# reduce_randomly = false
+#
+# # Fraction by which to reduce features each time OOM hit
+# reduce_by_fraction = 0.1
+#
+# # Number of trials to reduce features
+# # Generally can be 1/reduce_fraction to reduce all the way to 1 feature (hard-coded minimum feature count)
+# reduce_count_max = 10
+#
+# # Whether to keep list of dropped features (in individual's output_features_to_drop_more),
+# #  so future models and transformations would exclude those features too
+# # true more memory-conservative and makes a consistent pipeline based upon model
+# # false is useful if only memory issues are during training or want to speed-up training and don't want to permanently remove these reduced features
+# preserve_oom_reduced_features = true
+#
+# # Whether to keep features (dropped due to low variable importance) in transformers across iterations
+# # false means clear output_features_to_drop in each gene, and regenerate dropped features
+# #   This is default so feature generation can account for new interactions and only drop worst features each time
+# # true means preserve (and so accumulate) dropped features within each gene across iterations
+# preserve_varimp_reduced_features = false
+#
+# # Pass reduced features (determined during evolution) along to final model building
+# # If preserve_reduced_features_for_final_model=true, final model/ensemble will prune away same features as last best individual found during evolution
+# #  This includes both OOM and varimp determined features,
+# #    where each transformation's output_features_to_drop and the individuals output_features_to_drop_more are used together
+# preserve_reduced_features_for_final_model = true
+#
+# # Maximum mutation rate to reach after score flatlines
+# # Larger slower but more capable of finding useful features
+# # -1 means automatically chosen based upon accuracy, else set to >=1
+# mutation_rate = -1
+#
+# # How mutates individuals, with different/more mutations on individuals for
+# # higher values
+# # -1 means automatically chosen based upon accuracy, else set to 0, 1, 2, 3
+# extra_mutation_level = -1
+#
+# # Accuracy above and equal for which shares variable importance during tuning
+# tuning_share_varimp_accuracy_switch = 5
+#
+# # How to share varimp across scored indivs during tuning
+# # "None" : don't share
+# # "random" randomly select (may help overfitting)
+# # "last" use last before the current
+# # "best" use best indiv
+# # "average" : average all varimps previously (Not Implemented)
+# tuning_share_varimp = "best"
+#
+# # Accuracy at and above where only generate fresh individuals when getting population of more than one individual
+# fresh_indiv_accuracy_switch = 7
+# # MOJO: Use binary format to serialize decision trees
+# mojo_use_binary_tree_format = true
+#
+# # Minimum required number of rows (in the training data) for each class label for classification problems. If fewer, drop these rows.
+# min_rows_per_class = 5
+#
+# # Whether to import TensorFlow (true/false)
+# enable_tensorflow_import = true
+#
+# # Whether to import LightGBM (true/false)
+# enable_lightgbm_import = true
+#
+# # Probability of adding genes
+# prob_add_genes = 0.5
+#
+# # Probability of pruning genes
+# prob_prune_genes = 0.5
+#
+# # Probability of evolving xgboost parameters
+# prob_perturb_xgb = 0.25
+#
+# # Whether to randomly perturb tree depth/leaves or ratchet up/down by +-1 depth or */2 leaves
+# perturb_xgb_depth_random = false
+#
+# # Minimum and maximum depth (or 2**depth leaves) to perturb if not randomly perturbing depth
+# perturb_xgb_depth_min = 3
+# perturb_xgb_depth_max = 10
+#
+# # Given probability of adding genes, this is probability that will add best genes when adding
+# prob_addbest_genes = 0.5
+#
+# # Normalized probability of choosing to lag non-targets relative to targets
+# prob_lag_non_targets = 0.1
+#
+# # Unnormalized probability of choosing other lag based time-series transformers
+# prob_lagsinteraction = 0.1
+# prob_lagsaggregates = 0.1
+#
+# # Automatically generate is-holiday features from date columns
+# holiday_features = true
+#
+# # County code to use to look up holiday calendar (Python package 'holiday')
+# holiday_country = "US"
+#
+# # Whether to explore unused genes (true) or to explore evenly (false)
+# explore_more_unused_genes = true
+#
+# # Whether to anneal so that exploits instead of explores as mutations are done on individual (true)
+# # false forces explore_prob to be fixed at explore_prob0
+# # Idea is to exploit once information is available is obtained is reliable
+# explore_gene_anneal = true
+#
+# # Initial exploration (RND) vs. exploitation (IMP) probability
+# explore_prob0 = 0.5
+#
+# # Anneal factor by which exploration probability is multiplied each RND mutation, until reaches a lowest value of explore_prob_lowest
+# explore_anneal_factor = 0.9
+#
+# # Lowest explore_prob value
+# explore_prob_lowest = 0.1
+#
+# # Whether to anneal so that less rapid growth of gene addition (fast grow via IMP) and more random addition (slow grow via RND)
+# # true means do this, false means just split IMP fast_growth of genes and RND 50%/50%.
+# explore_grow_anneal = true
+#
+# # Initial probability for growing genes by exploration/random selection
+# grow_prob0 = 0.8
+#
+# # Anneal factor by which grow probability is multiplied each fast grow mutation, until reaches a lowest value of grow_prob_lowest
+# grow_anneal_factor = 0.5
+#
+# # Lowest probability value for grow_prob
+# grow_prob_lowest = 0.05
+#
+# # Fixed probability for ratio of IMP to RND if explore_grow_anneal = false
+# grow_proboff = 0.5
+#
+# # Whether to speed up predictions used inside MLI with a fast approximation
+# mli_fast_approx = true
+#
+# # During tuning phase, how much to focus on tuning model parameters relative to features
+# # prob_tune_model_vs_features=1 means focus on model, 0 means focus on features
+# prob_tune_model_vs_features = 0.5
+#
+# # Upper limit for interpretability settings to enable XGBoost models (for tuning and feature evolution)
+# xgboost_interpretability_switch = 10
+#
+# # Lower limit for accuracy settings to enable XGBoost models (for tuning and feature evolution)
+# xgboost_accuracy_switch = 1
+#
+# # Whether to force use of LightGBM for FS Permute
+# # Choose 'auto' to have booster match autotune settings
+# booster_for_fs_permute = 'lightgbm'
+#
+# # Which booster to use as default
+# default_booster = 'lightgbm'
+#
+# # Internal threshold for number of rows x number of columns to trigger CPU training for FS Permute
+# threshold_data_size_large_to_use_cpu_for_fs = 100000000
+#
+# # Upper limit for interpretability settings to enable GBM models (for tuning and feature evolution)
+# lightgbm_interpretability_switch = 10
+#
+# # Lower limit for accuracy settings to enable GBM models (for tuning and feature evolution)
+# lightgbm_accuracy_switch = 1
+#
+# # Upper limit for interpretability settings to enable TensorFlow models (for tuning and feature evolution)
+# tensorflow_interpretability_switch = 6
+#
+# # Lower limit for accuracy settings to enable Tensorflow models (for tuning and feature evolution)
+# tensorflow_accuracy_switch = 5
+#
+# # Number of classes above and equal which to always use TensorFlow instead of others models (if TensorFlow is enabled)
+# tensorflow_num_classes_switch = 5
+#
+# # Whether to do lambda search for GLM (only applicable to ensemble_level > 0)
+# # Not always a good idea, can be slow for little payoff compared to grid search
+# glm_do_lambda_search = false
+#
+# # Lower limit for interpretability settings to enable GLM models (for tuning and feature evolution)
+# glm_interpretability_switch = 6
+#
+# # Upper limit for accuracy settings to enable GLM models (for tuning and feature evolution)
+# glm_accuracy_switch = 5
+#
+# # Lower limit for interpretability settings to enable RuleFit models (for tuning and feature evolution)
+# rulefit_interpretability_switch = 4
+#
+# # Upper limit for accuracy settings to enable RuleFit models (for tuning and feature evolution)
+# rulefit_accuracy_switch = 8
+#
+# # Internal helper to see if user wanted reproducible mode (default should be true for unit tests)
+# reproducible = true
+#
+# # Whether to enable caching in final pipeline munging
+# enable_cache_final_pipeline = false
+#
+# # Max. sample size for automatic determination of time series train/valid split properties, only if time column is selected
+# max_time_series_properties_sample_size = 1000000
+#
+# # Maximum number of lag sizes, which are sampled from if sample_lag_sizes==true, else all are taken (-1 == automatic)
+# max_lag_sizes = -1
+#
+# # Minimum required autocorrelation threshold for a lag to be considered for feature engineering
+# min_lag_autocorrelation = 0.1
+#
+# # How many samples of lag sizes to use for a single time group (single time series signal)
+# max_signal_lag_sizes = 100
+#
+# # Whether to sample lag sizes
+# sample_lag_sizes = false
+#
+# # Probability for new Lags/EWMA gene to use default lags (determined by frequency/gap/horizon, independent on data)
+# prob_default_lags = 0.2
+#
+# # How many samples of lag sizes to use, chosen randomly out of original set of lag sizes
+# max_sampled_lag_sizes = 10
+#
+# # Override lags to be used
+# override_lag_sizes = []
+#
+# # Hack for debugging - only used to see how deep a process is
+# top_pid = -1
+#
+# # Whether mismatch during golden results check is fatal
+# golden_fatal = false
+#
+# # Notifications
+# notification_url = "https://s3.amazonaws.com/ai.h2o.notifications/dai_notifications_prod.json"
+#
+# # Type of ping process ("thread" or "fork").  "fork" avoids issues with mixing threads and other forks
+# ping_run_type = "fork"
+#
+# # Whether to log all locks to avoid bad overwrites between main, ping proc, and other sub-procs
+# lock_logs = true
+#
+# # Whether to also lock the main server logger.  Will generate contention between experiments if true.
+# lock_logs_server = false
+#
+# # Whether to keep feature cache files
+# debug_feature_cache_files = false
+#
+# # Whether to keep feature cache files
+# debug_final_feature_cache_files = false
+#
+# # Whether to generate a fresh logger for every log call.
+# # More strictly will ensure no logger overlap between procs, but also does slow down overall experiments (e.g. iris 2 cols goes from 100s to 160s with fresh loggers created for every call)
+# # Otherwise, fresh logger is only created when logger=None is passed to logger functions, as if in another proc
+# generate_fresh_logger_every_log = true
+#
+# # Reduce memory usage during final ensemble feature engineering (1 uses most memory, larger values use less memory)
+# final_munging_memory_reduction_factor = 2
+#
+# # Simulate segfault by pipeline or models
+# prob_segfault_ga_pipeline = 0.0
+# prob_segfault_ga_model = 0.0
+# prob_segfault_final_pipeline = 0.0
+# prob_segfault_final_model = 0.0
+# prob_segfault_lightgbm = 0.0
+# prob_segfault_xgboost = 0.0
+# prob_segfault_gblinear = 0.0
+# prob_segfault_tensorflow = 0.0
+# prob_segfault_rulefit = 0.0
+#
+# # Simulate stall
+# prob_stall_ga_pipeline = 0.0
+# prob_stall_fitmodel = 0.0
+# prob_stall_final_pipeline = 0.0
+#
+# # Simulate stall to kill
+# prob_stall_kill_ga_pipeline = 0.0
+# prob_stall_kill_fitmodel = 0.0
+# prob_stall_kill_final_pipeline = 0.0
+#
+# # Simulate early finish/abort by user
+# prob_finish_early = 0.0
+# prob_abort_early = 0.0
+#
+# # To prevent overfitting:
+# # For now they can see how many folds per model was done during iterations, and they can change the toml parameter "num_folds" to increase the number of folds.
+# # They can also set "nfeatures_max" to a number that's similar to when they had good results.
+# #  Sometimes a large amount of feature generation can do well on fitting on the given holdout, and fewer features are less likely to do this.
+# # If sensitivity to dropped features is a concern, they can set: preserve_reduced_features_for_final_model=false
+# # Lastly, they can increase "varimp_threshold_at_interpretability_10" (developer option) from its default of 0.05 to (say) 0.2 or even higher so that
+# #  with their chosen interpretability it'll drop less important features.
+#
+# # To help with too many cores and resource exhaustion
+# # final_munging_memory_reduction_factor=10
+# # max_cores=10
+#
+# # Stall submission of subprocesses if system CPU usage is higher than this threshold in percent (set to 100 to disable)
+# stall_subprocess_submission_cpu_threshold_pct = 90
+#
+# # Stall submission of subprocesses if system memory available is less than this threshold in percent (set to 0 to disable)
+# stall_subprocess_submission_mem_threshold_pct = 10
+#
+# # During feature evolution, drop all features that have lower variable importance than a random column
+# random_control = false

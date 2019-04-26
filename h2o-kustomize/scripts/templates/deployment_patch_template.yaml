@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: NAME
+  namespace: NAMESPACE
+spec:
+  template:
+    containers:
+    - name: NAME
+      resources:
+        requests:
+          memory: MEMORY
+          cpu: CPU
+          nvidia.com/gpu: GPU
+        limits:
+          memory: MEMORY
+          cpu: CPU
+          nvidia.com/gpu: GPU
+      volumeMounts:
+      - mountPath: /tmp
+        name: PVC_NAME
+      - mountPath: /log
+        name: PVC_NAME
+    volumes:
+    - name: PVC_NAME
+      persistentVolumeClaim:
+        claimName: NAME

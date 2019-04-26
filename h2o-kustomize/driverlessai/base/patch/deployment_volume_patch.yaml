@@ -1,0 +1,52 @@
+- op: replace
+  path: /spec/template/spec/containers/0/volumeMounts
+  value:
+    - mountPath: /tmp
+      name: dai-deploy-161-pvc
+    - mountPath: /log
+      name: dai-deploy-161-pvc
+
+- op: replace
+  path: /spec/template/spec/volumes
+  value:
+    - name: dai-deploy-161-pvc
+      persistentVolumeClaim:
+        claimName: dai-deploy-161
+
+- op: add
+  path: /spec/template/spec/containers/0/env/-
+  value:
+    name: "DRIVERLESS_AI_CONFIG_FILE"
+    value: /config/config.toml
+
+- op: add
+  path: /spec/template/spec/containers/0/volumeMounts/-
+  value:
+    mountPath: /config
+    name: myconfig
+
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: myconfig
+    configMap:
+      name: myconfig
+
+- op: add
+  path: /spec/template/spec/containers/0/env/-
+  value:
+    name: DRIVERLESS_AI_LICENSE_FILE
+    value: /secret/license.sig
+
+- op: add
+  path: /spec/template/spec/containers/0/volumeMounts/-
+  value:
+    mountPath: /secret
+    name: mylicense
+
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: mylicense
+    secret:
+      secretName: mylicense

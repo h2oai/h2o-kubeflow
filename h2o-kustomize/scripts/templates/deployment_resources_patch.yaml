@@ -1,0 +1,21 @@
+- op: replace
+  path: /spec/template/spec/containers/0/resources
+  value:
+    requests:
+      memory: MEMORY
+      cpu: CPU
+      nvidia.com/gpu: GPU
+    limits:
+      memory: MEMORY
+      cpu: CPU
+      nvidia.com/gpu: GPU
+
+- op: replace
+  path: /metadata
+  value:
+    name: NAME
+    namespace: NAMESPACE
+
+- op: replace
+  path: /spec/template/spec/containers/0/name
+  value: NAME

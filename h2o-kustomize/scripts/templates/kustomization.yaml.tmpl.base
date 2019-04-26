@@ -4,49 +4,37 @@ kind: Kustomization
 commonLabels:
   app: dai-deployment-app
 
-# - volume.yaml
 resources:
 - deployment.yaml
 - service.yaml
+# - volume.yaml
 - volume_claim.yaml
 
 patchesJson6902:
-- path: ./patch/deployment_resources_patch.yaml
-  target:
+- target:
     group: apps
+    version: v1
     kind: Deployment
     name: dai-deploy
-    version: v1
-- path: ./patch/deployment_volume_patch.yaml
-  target:
+  path: ./patch/deployment_resources_patch.yaml
+- target:
     group: apps
+    version: v1
     kind: Deployment
     name: dai-deploy
+  path: ./patch/deployment_volume_patch.yaml
+- target:
     version: v1
-- path: ./patch/service_patch_template.yaml
-  target:
     kind: Service
     name: dai-deploy
+  path: ./patch/service_patch_template.yaml
+- target:
     version: v1
-- path: ./patch/volume_claim_patch_template.yaml
-  target:
     kind: PersistentVolumeClaim
     name: dai-deploy
-    version: v1
+  path: ./patch/volume_claim_patch_template.yaml
 # - target:
 #     version: v1
 #     kind: PersistentVolume
 #     name: dai-deploy
 #   path: ./patch/volume_patch_template.yaml
-
-generatorOptions:
-  disableNameSuffixHash: true
-configMapGenerator:
-- files:
-  - ./config/config.toml
-  name: myconfig
-secretGenerator:
-- files:
-  - ./secret/license.sig
-  name: mylicense
-  type: Opaque
