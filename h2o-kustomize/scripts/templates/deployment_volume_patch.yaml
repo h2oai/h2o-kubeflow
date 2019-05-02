@@ -5,6 +5,8 @@
       name: PVC_NAME
     - mountPath: /log
       name: PVC_NAME
+    - mountPath: /license
+      name: PVC_NAME
 
 - op: replace
   path: /spec/template/spec/volumes
