@@ -1,5 +1,3 @@
 # ignore DS_Store
 *.DS_Store
 __pycache__/
-h2o-kustomize/driverlessai/base/secret
-h2o-kustomize/driverlessai/base/config
